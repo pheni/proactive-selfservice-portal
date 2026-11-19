@@ -1,0 +1,445 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ServiceNow TSM Master Dashboard Data Specification",
+  "description": "Comprehensive data model specification for fully dynamic B2B Telecom Portal Dashboard backed by ServiceNow TSM/CSM modules.",
+  "version": "2.0.0",
+  "target_account": {
+    "account_name": "Tata B2B Enterprise Services",
+    "account_sys_id": "66c0d2e02bc4935016f8f0aef291bf09",
+    "table": "customer_account",
+    "contract_number": "CONT-00283",
+    "contract_table": "ast_contract",
+    "sla_tier": "Tier-1 Platinum SLA (99.90% Availability · 4.0h MTTR)",
+    "primary_contact": {
+      "user_name": "goutam.hazra",
+      "full_name": "Goutam Hazra",
+      "title": "Head of Enterprise Infrastructure",
+      "email": "goutam.hazra@tataglobal.com",
+      "phone": "+91 98200 99887",
+      "roles": ["sn_customerservice.customer"]
+    },
+    "child_sites": [
+      { "site_code": "PUN-01", "name": "Pune Technical Center", "sla_target": "99.90%", "current_sla": "92.1%" },
+      { "site_code": "MUM-HQ", "name": "Mumbai Global HQ & Trading Floor", "sla_target": "99.99%", "current_sla": "99.98%" },
+      { "site_code": "CHE-02", "name": "Chennai Automotive Smart Plant", "sla_target": "99.90%", "current_sla": "97.4%" },
+      { "site_code": "BLR-01", "name": "Bangalore Cloud & AI R&D Campus", "sla_target": "99.95%", "current_sla": "99.95%" },
+      { "site_code": "SGP-01", "name": "Singapore APAC Regional Gateway", "sla_target": "99.90%", "current_sla": "98.6%" }
+    ]
+  },
+  "dashboard_kpis": {
+    "customer_account": {
+      "display_value": "Tata B2B Enterprise Services",
+      "sla_badge": "Tier-1 Platinum SLA",
+      "sla_badge_tone": "green",
+      "target_table": "customer_account",
+      "target_fields": ["name", "u_sla_tier"]
+    },
+    "active_orders": {
+      "count": 2,
+      "display_text": "2 In Delivery",
+      "progress_percentage": 68,
+      "progress_badge": "68% Project Progress",
+      "target_table": "sn_ind_tmt_orm_order",
+      "fallback_table": "customer_order",
+      "orders": [
+        {
+          "order_number": "ORD-9021",
+          "title": "10G Secondary Optical Ring Expansion",
+          "site": "Mumbai Global HQ",
+          "status": "In Delivery",
+          "milestone": "Optical SFP+ Carrier Acceptance",
+          "progress": 75
+        },
+        {
+          "order_number": "ORD-8840",
+          "title": "Dual-Band SD-WAN Gateway Deployment",
+          "site": "Pune Technical Center",
+          "status": "In Delivery",
+          "milestone": "Site Readiness Sign-off",
+          "progress": 60
+        }
+      ]
+    },
+    "support_center": {
+      "open_count": 10,
+      "display_text": "10 Open",
+      "assurance_count": 10,
+      "badge_text": "10 In Assurance",
+      "badge_tone": "amber",
+      "target_table": "sn_customerservice_case",
+      "breakdown_by_priority": {
+        "P1": 1,
+        "P2": 2,
+        "P3": 5,
+        "P4": 2
+      }
+    },
+    "services_hub": {
+      "total_assets": 163,
+      "display_text": "163 Assets",
+      "target_table": "cmdb_ci_service",
+      "tmt_table": "cmdb_ci_telecom_service",
+      "family_breakdown": {
+        "wan": { "count": 4, "badge": "4 WAN", "tone": "green" },
+        "fiber": { "count": 3, "badge": "3 Fibre", "tone": "blue" },
+        "mobile": { "count": 156, "badge": "156 SIMs", "tone": "purple" }
+      }
+    }
+  },
+  "active_service_degradations": {
+    "impaired_circuits_count": 3,
+    "total_assurance_cases": 10,
+    "banner_title": "Active Service Degradations",
+    "banner_subtitle": "(3 Impaired Circuits · 10 Total Cases in Assurance)",
+    "rollup_pills": [
+      {
+        "id": "CKT-PUN-001",
+        "circuit_id": "CKT-PUN-001",
+        "site_tag": "Pune MPLS",
+        "service_name": "1 Gbps Primary Optical MPLS Trunk",
+        "location": "Pune Technical Center",
+        "priority": "P1",
+        "priority_tone": "red",
+        "status": "Critical Outage",
+        "case_number": "ALEONB0001007",
+        "target_mttr": "1.2 hrs remaining",
+        "latency_ms": 48,
+        "packet_loss_pct": 14.8,
+        "availability_30d_pct": 92.1,
+        "optical_power_dbm": -24.8,
+        "impact_summary": "Elevated latency (48ms) and 14.8% packet attenuation on primary optical tail",
+        "root_cause": "Optical fiber signal attenuation on customer premises last-mile drop (-24.8 dBm threshold breach)",
+        "assigned_to": "Anish Kutti (NOC Duty Lead)"
+      },
+      {
+        "id": "CKT-MUM-002",
+        "circuit_id": "CKT-MUM-002",
+        "site_tag": "Mumbai 10G",
+        "service_name": "10G Redundant Secondary Optical Trunk",
+        "location": "Mumbai Global HQ & Trading Floor",
+        "priority": "P2",
+        "priority_tone": "amber",
+        "status": "Degraded Performance",
+        "case_number": "CSM001289",
+        "target_mttr": "2.8 hrs remaining",
+        "latency_ms": 32,
+        "packet_loss_pct": 3.2,
+        "availability_30d_pct": 97.4,
+        "optical_power_dbm": -19.2,
+        "impact_summary": "BGP route flap causing brief failover cycles on secondary trading trunk (32ms latency, 3.2% loss)",
+        "root_cause": "Carrier upstream peering router memory threshold warnings causing BGP hold-down flaps",
+        "assigned_to": "Vikram Seth (SD-WAN Core Engineering)"
+      },
+      {
+        "id": "CKT-SIN-003",
+        "circuit_id": "CKT-SIN-003",
+        "site_tag": "Singapore Cloud",
+        "service_name": "Cloud Connect Express (Singapore APAC Gateway)",
+        "location": "Singapore APAC Regional Gateway",
+        "priority": "P2",
+        "priority_tone": "amber",
+        "status": "Degraded Performance",
+        "case_number": "CSM001304",
+        "target_mttr": "3.4 hrs remaining",
+        "latency_ms": 64,
+        "packet_loss_pct": 1.8,
+        "availability_30d_pct": 98.6,
+        "optical_power_dbm": -18.5,
+        "impact_summary": "DirectConnect 802.1Q VLAN subsea cross-connect re-indexing in progress (64ms latency, 1.8% loss)",
+        "root_cause": "Subsea cable maintenance detour; automated failover to Slough backup link maintaining uptime",
+        "assigned_to": "Cloud Infrastructure Assurance Queue"
+      }
+    ]
+  },
+  "service_spotlight": {
+    "description": "Selected asset console dynamically synchronizing metrics with active incident and diagnostic feeds",
+    "metrics_mapping": {
+      "circuit_id": "currentSpotlightService.circuitId",
+      "service_name": "currentSpotlightService.name",
+      "category": "currentSpotlightService.category",
+      "bandwidth": "currentSpotlightService.bandwidth",
+      "status": "currentSpotlightService.status",
+      "location": "currentSpotlightService.location",
+      "availability": "currentSpotlightService.availability",
+      "latency_loss": "${currentSpotlightService.latency} · ${currentSpotlightService.packetLoss}",
+      "active_ticket": "currentSpotlightService.activeCaseNumber"
+    }
+  },
+  "incident_health_telemetry_feed": {
+    "source_event": "em_event / em_alert correlated to sn_customerservice_case",
+    "milestones_by_circuit": {
+      "CKT-PUN-001": [
+        {
+          "title": "NOC Duty Lead Assigned",
+          "category": "Investigation",
+          "category_tone": "amber",
+          "text": "Assigned to duty manager for physical tail loopback & cross-connect verification on CKT-PUN-001.",
+          "time": "Today, 10:18 AM"
+        },
+        {
+          "title": "Optical Diagnostic Completed",
+          "category": "Diagnostics",
+          "category_tone": "blue",
+          "text": "Telemetry checked link attenuation at -24.8 dBm threshold. BGP hold-down timer refreshed to 90 seconds.",
+          "time": "Today, 10:04 AM"
+        },
+        {
+          "title": "Assurance Incident Opened",
+          "category": "Telemetry",
+          "category_tone": "red",
+          "text": "Proactive incident ALEONB0001007 triggered: packet loss exceeded 5% carrier SLA threshold (measured 14.8%).",
+          "time": "Today, 10:01 AM"
+        }
+      ],
+      "CKT-MUM-002": [
+        {
+          "title": "BGP Route Damping Tuned",
+          "category": "SD-WAN Routing",
+          "category_tone": "amber",
+          "text": "Carrier upstream peering router renewed memory threshold. BGP hold-down timer configured to 90s, stabilizing secondary trading tunnel.",
+          "time": "Today, 11:42 AM"
+        },
+        {
+          "title": "Jitter Variance Flagged",
+          "category": "Diagnostics",
+          "category_tone": "blue",
+          "text": "Automated telemetry detected 18ms jitter elevation across secondary 10G optical path during trading peak.",
+          "time": "Today, 11:35 AM"
+        },
+        {
+          "title": "Assurance Case CSM001289 Opened",
+          "category": "Telemetry",
+          "category_tone": "amber",
+          "text": "Proactive incident CSM001289 registered in ServiceNow CSM. SLA remaining: 2.8 hrs.",
+          "time": "Today, 11:30 AM"
+        }
+      ],
+      "CKT-SIN-003": [
+        {
+          "title": "AWS DirectConnect 802.1Q Sync",
+          "category": "Cloud Connect",
+          "category_tone": "amber",
+          "text": "VLAN 402 configuration synchronized with AWS Virtual Private Cloud gateway. Backup interconnect carrying live traffic.",
+          "time": "Today, 01:15 PM"
+        },
+        {
+          "title": "Subsea Cable Path Optimization",
+          "category": "Routing",
+          "category_tone": "blue",
+          "text": "Carrier dynamic path steering rerouted non-critical transit around regional subsea fiber maintenance window.",
+          "time": "Today, 01:05 PM"
+        },
+        {
+          "title": "Assurance Case CSM001304 Opened",
+          "category": "Telemetry",
+          "category_tone": "amber",
+          "text": "Proactive DirectConnect health check logged temporary transit re-indexing. Target MTTR: 3.4 hrs.",
+          "time": "Today, 01:00 PM"
+        }
+      ]
+    }
+  },
+  "telecom_estate_portfolio": {
+    "core_wan_circuits": {
+      "tab_label": "Core WAN (4 Circuits · 3 Impaired)",
+      "table": "cmdb_ci_service / cmdb_ci_telecom_service",
+      "items": [
+        {
+          "circuit_id": "CKT-PUN-001",
+          "name": "1 Gbps Primary Optical MPLS Trunk",
+          "category": "Core WAN",
+          "bandwidth": "1 Gbps",
+          "location": "Pune Technical Center",
+          "status": "Critical",
+          "availability": "92.1%",
+          "latency": "Elevated (48ms)",
+          "packet_loss": "14.8%",
+          "active_case": "ALEONB0001007",
+          "is_spotlight": true
+        },
+        {
+          "circuit_id": "CKT-MUM-002",
+          "name": "10G Redundant Secondary Optical Trunk",
+          "category": "Core WAN",
+          "bandwidth": "10 Gbps",
+          "location": "Mumbai Global HQ & Trading Floor",
+          "status": "Degraded",
+          "availability": "97.4%",
+          "latency": "Elevated (32ms)",
+          "packet_loss": "3.2%",
+          "active_case": "CSM001289",
+          "is_spotlight": false
+        },
+        {
+          "circuit_id": "CKT-SIN-003",
+          "name": "Cloud Connect Express (Singapore APAC Gateway)",
+          "category": "Cloud Connect",
+          "bandwidth": "500 Mbps",
+          "location": "Singapore APAC Regional Gateway",
+          "status": "Degraded",
+          "availability": "98.6%",
+          "latency": "Elevated (64ms)",
+          "packet_loss": "1.8%",
+          "active_case": "CSM001304",
+          "is_spotlight": false
+        },
+        {
+          "circuit_id": "CKT-MUM-001",
+          "name": "10G Ultra-Low Latency Core Optical Ring",
+          "category": "Core WAN",
+          "bandwidth": "10 Gbps",
+          "location": "Mumbai Global HQ & Trading Floor",
+          "status": "Operational",
+          "availability": "99.98%",
+          "latency": "Optimal (2ms)",
+          "packet_loss": "0.0%",
+          "active_case": null,
+          "is_spotlight": false
+        }
+      ]
+    },
+    "fiber_broadband_links": {
+      "tab_label": "Fiber Broadband (3 Links)",
+      "table": "cmdb_ci_telecom_service",
+      "items": [
+        {
+          "circuit_id": "LON-CW-FIB-9002",
+          "name": "Multi-Gig Workplace Dedicated Fibre",
+          "speed": "1 Gbps / 1 Gbps Symmetrical",
+          "status": "Operational",
+          "status_tone": "green",
+          "ont_terminal": "Adtran SDX 6320 Optical ONT",
+          "optical_signal": "-18.2 dBm (Optimal optical margin)",
+          "static_ip_pool": "194.72.108.64/29 (5 usable public IPs)",
+          "address": "London Canary Wharf HQ - Comms Room B",
+          "monthly_cost": 450.00
+        },
+        {
+          "circuit_id": "MAN-TR-FIB-4011",
+          "name": "High-Speed Business Fibre Broadband",
+          "speed": "500 Mbps / 100 Mbps",
+          "status": "Operational",
+          "status_tone": "green",
+          "ont_terminal": "Nokia XS-010X Optical Terminal",
+          "optical_signal": "-19.5 dBm (Optimal)",
+          "static_ip_pool": "194.72.112.32/29 (5 usable public IPs)",
+          "address": "Manchester Regional Logistics Hub - Comms Room 1",
+          "monthly_cost": 280.00
+        },
+        {
+          "circuit_id": "EDN-MQ-FIB-7701",
+          "name": "Ultra-Low Latency Broadcast Media Fibre",
+          "speed": "2 Gbps / 2 Gbps Symmetrical",
+          "status": "Operational",
+          "status_tone": "green",
+          "ont_terminal": "Ciena 3903x Service Delivery Switch",
+          "optical_signal": "-17.8 dBm (Optimal margin)",
+          "static_ip_pool": "194.72.115.16/29 (5 usable public IPs)",
+          "address": "Edinburgh Production Studio - Rack 04",
+          "monthly_cost": 620.00
+        }
+      ]
+    },
+    "mobile_fleet": {
+      "tab_label": "Mobile Fleet (156 SIMs)",
+      "table": "cmdb_ci_telecom_service / alm_asset",
+      "total_count": 156,
+      "sample_lines": [
+        {
+          "id": "SUB-MOB-201",
+          "phone_number": "+91 98200 90456",
+          "assigned_user": "Marcus Chen",
+          "department": "Supply Chain Operations",
+          "plan": "Logistics Fleet Pro 5G Unlimited",
+          "device": "Zebra TC57 Rugged Enterprise",
+          "sim_number": "8944 1100 2938 8124",
+          "status": "Active",
+          "status_tone": "green",
+          "data_used_gb": 95.8,
+          "data_limit_gb": 100,
+          "monthly_cost": 55.00,
+          "is_warning": true
+        },
+        {
+          "id": "SUB-MOB-202",
+          "phone_number": "+91 98200 90457",
+          "assigned_user": "Elena Rostova",
+          "department": "Executive Leadership",
+          "plan": "Executive Global Roam 5G (UK/EU/APAC)",
+          "device": "Apple iPhone 15 Pro Enterprise Managed",
+          "sim_number": "8944 1100 2938 8125",
+          "status": "Active",
+          "status_tone": "green",
+          "data_used_gb": 42.1,
+          "data_limit_gb": 0,
+          "monthly_cost": 85.00,
+          "is_warning": false
+        },
+        {
+          "id": "SUB-MOB-204",
+          "phone_number": "+91 98200 90458",
+          "assigned_user": "Telematics Unit B",
+          "department": "Fleet Logistics Dispatch",
+          "plan": "M2M Industrial Fleet Telematics 5G",
+          "device": "Teltonika RUT955 Cellular Gateway",
+          "sim_number": "8944 1100 2938 8127",
+          "status": "Active",
+          "status_tone": "green",
+          "data_used_gb": 14.2,
+          "data_limit_gb": 30,
+          "monthly_cost": 28.00,
+          "is_warning": false
+        },
+        {
+          "id": "SUB-MOB-205",
+          "phone_number": "+91 98200 90459",
+          "assigned_user": "NOC Standby Pool",
+          "department": "Infrastructure Assurance",
+          "plan": "Critical WAN Backup Standby SIM",
+          "device": "Cradlepoint AER2200 Edge Router",
+          "sim_number": "8944 1100 2938 8128",
+          "status": "Suspended",
+          "status_tone": "slate",
+          "data_used_gb": 0.0,
+          "data_limit_gb": 50,
+          "monthly_cost": 15.00,
+          "is_warning": false
+        }
+      ]
+    }
+  },
+  "context_intelligence": {
+    "stream_title": "Context Intelligence",
+    "badge": "Live Stream",
+    "items": [
+      {
+        "id": "intel-01",
+        "title": "APAC Logistics Fleet 5G Cap",
+        "value": "95.8 / 100 GB",
+        "value_tone": "amber",
+        "description": "Field Telematics SIM +91 98200 90456 (Pune Dispatch) reached 95% threshold. Proactive data buffer extended.",
+        "trigger_source": "Telecom Expense / Usage Alert"
+      },
+      {
+        "id": "intel-02",
+        "title": "Core Optical Margin Telemetry",
+        "value": "Optimal",
+        "value_tone": "emerald",
+        "description": "Circuit CKT-PUN-001 optical tail attenuation at -24.8 dBm (alert). Secondary ring CKT-MUM-001 optimal at -16.8 dBm.",
+        "trigger_source": "Optical Transceiver DOM Health Check"
+      },
+      {
+        "id": "intel-03",
+        "title": "Capacity Optimization Advisory",
+        "value": "Proactive",
+        "value_tone": "teal",
+        "description": "Peak 90th percentile traffic on Pune-Mumbai SD-WAN mesh reached 88%. Automated recommendation: profile burst to 10G trunk.",
+        "trigger_source": "Predictive Bandwidth Intelligence Engine"
+      }
+    ],
+    "carrier_node_health": {
+      "status": "Operational",
+      "uptime_pct": "99.99%"
+    }
+  }
+}

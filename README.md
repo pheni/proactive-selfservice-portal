@@ -1,0 +1,69 @@
+# TelcoConnect Customer Admin Portal
+
+
+
+### Setup & Execution
+
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+2. **Development mode:**
+   Starts the Express server with Vite middleware for HR and fast development.
+   ```bash
+   npm run dev
+   ```
+
+3. **Production mode (deployment to EC2/Cloud):**
+   First, build the optimized frontend assets, then start the Node.js server.
+   ```bash
+   npm run build
+   npm start
+   ```
+
+> **Deployment Note:** The server is configured to listen on port `3000` and host `0.0.0.0`. Ensure your server's firewall/security group allows inbound traffic on port 3000.
+
+A professional, enterprise-grade portal designed for telecommunications administrators to manage B2B customer accounts, network health, and financial operations.
+
+## 🚀 Key Features
+
+- **Admin Command Center:** A mission-control style landing page with global network statistics.
+- **Secure Authentication:** Hardware-verified session authorization simulation.
+- **Customer Overview:** Comprehensive dashboard for data usage, revenue trends, and interaction logs.
+- **Subscription Management:** Full lifecycle control over corporate mobile, fibre, and VoIP lines.
+- **Unified Financials:** Consolidates billing, payment methods, and transaction ledgers.
+- **Decision Support:** Optimization recommendations based on real-time consumption spikes.
+
+## 🛠️ Tech Stack
+
+### Frontend & Core
+- **React 19:** Functional components and modern hook-based state management.
+- **TypeScript:** Strict typing for robust data modeling and application reliability.
+- **Vite 6:** Ultra-fast build tool and development server.
+
+### UI & UX
+- **Tailwind CSS 4:** Utility-first styling for high-density enterprise interfaces.
+- **Motion (Framer Motion):** Smooth micro-interactions and page transitions.
+- **Lucide React:** Consistent architectural and action-based iconography.
+
+### Data & Visualization
+- **Recharts:** Composable charts for network usage, asset distribution, and financial trends.
+- **Context API:** Global state management for synchronized data across modules.
+
+### Backend & Infrastructure
+- **Node.js:** Modern runtime environment.
+- **Express:** Integrated for potential API route extensions and server-side logic.
+
+## ⚙️ Technical Implementation
+
+### Dynamic Data Models
+- **Customer Overview:** Centrally manages customer states, allowing the app to dynamically render insights based on account IDs.
+
+### Usage Analytics Engine
+- **Usage Distribution:** Refactored from hardware-centric views to service-usage views (Data, Voice, Cloud, IoT) to better align with telco billing logic.
+- **Optimization Logic:** Implementation of logic that triggers specific upsell recommendations (like "Infinite Bandwidth+") when consumption spikes are detected in the `mockData` streams.
+
+## 📈 Demo Scenarios
+
+The portal includes pre-configured mock data for various business cases, including a **Critical Usage Spike** scenario for **Nexus Venture Group**, demonstrating how admins can use proactive insights to suggest bandwidth upgrades.
