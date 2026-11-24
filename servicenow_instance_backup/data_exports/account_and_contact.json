@@ -1,0 +1,15 @@
+{
+  "account": {
+    "sys_id": "f9277ad81be41b109ac94081b24bcb66",
+    "name": "Tata B2B Enterprise Services",
+    "number": "ACCT0010001",
+    "tier": "Tier-1 Platinum",
+    "sla": "99.99% Availability SLA"
+  },
+  "contact": {
+    "sys_id": "cc87f9dc1ba8d7109ac94081b24bcbc2",
+    "name": "Goutam Hazra",
+    "email": "goutam.hazra@tataglobal.com",
+    "title": "Head of Enterprise Infrastructure"
+  }
+}

@@ -19,7 +19,7 @@ export const ClosedCaseDetailPage: React.FC<ClosedCaseDetailPageProps> = ({
   onNavigate,
   onOpenVirtualAssistant
 }) => {
-  const cItem: ClosedCaseItem = serviceNowRestService.getClosedCaseByNumber(selectedCaseNumber || 'CSM001102');
+  const cItem: ClosedCaseItem = serviceNowRestService.getClosedCaseByNumber(selectedCaseNumber || (portalData.closedCasesList?.[0]?.caseNumber || ''));
 
   const backLabel = previousPage === 'dashboard' ? 'Back to Overview' : (previousPage === 'cases' ? 'Back to Cases Hub' : 'Back to Case History');
   const backTarget = previousPage === 'dashboard' ? 'dashboard' : (previousPage === 'cases' ? 'cases' : 'history');

@@ -33,7 +33,7 @@ import { SecurityPage } from './components/Pages/SecurityPage';
 import ServiceNowVirtualAgent from './components/ServiceNowVirtualAgent';
 import ServiceNowEngagementMessenger from './components/ServiceNowEngagementMessenger';
 import ServiceNowEnhancedChat from './components/ServiceNowEnhancedChat';
-import { ServiceNowNativeChatLeft } from './components/ServiceNowNativeChatLeft';
+import { ServiceNowAutonomousNLQChat } from './components/ServiceNowAutonomousNLQChat';
 
 
 export function App() {
@@ -41,6 +41,7 @@ export function App() {
     return serviceNowAuthService.isAuthenticated();
   });
 
+  const [nlqChatOpen, setNlqChatOpen] = useState(false);
   const [page, setPage] = useState<PageType>('dashboard');
   const [previousPage, setPreviousPage] = useState<PageType | undefined>(undefined);
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -53,8 +54,8 @@ export function App() {
   const [preselectedServiceId, setPreselectedServiceId] = useState<string | undefined>(undefined);
   
   // Selection state for detail pages
-  const [selectedActiveCaseNum, setSelectedActiveCaseNum] = useState<string>('CSM001245');
-  const [selectedClosedCaseNum, setSelectedClosedCaseNum] = useState<string>('CSM000982');
+  const [selectedActiveCaseNum, setSelectedActiveCaseNum] = useState<string>(() => serviceNowRestService.getActiveCases()[0]?.caseNumber || '');
+  const [selectedClosedCaseNum, setSelectedClosedCaseNum] = useState<string>(() => serviceNowRestService.getClosedCases()[0]?.caseNumber || '');
 
   const [portalData, setPortalData] = useState<PortalData>(() => serviceNowRestService.getPortalData());
   const [timeline, setTimeline] = useState(() => serviceNowRestService.getTimeline());
@@ -86,8 +87,19 @@ export function App() {
       if (accountData?.accountName) {
         refreshedPortalData.account = accountData.accountName;
       }
-      if (freshServices && freshServices.length > 0) {
-        refreshedPortalData.servicesList = freshServices;
+      refreshedPortalData.servicesList = freshServices || [];
+      if (accountData?.accountName === 'No Account Associated' || !accountData?.accountId) {
+        refreshedPortalData.invoices = [];
+        refreshedPortalData.contracts = [];
+        refreshedPortalData.mobileSubscriptions = [];
+        refreshedPortalData.fiberBroadband = [];
+        refreshedPortalData.voiceTrunks = [];
+        refreshedPortalData.service = '';
+        refreshedPortalData.serviceId = '';
+        refreshedPortalData.caseNumber = '';
+        refreshedPortalData.incidentReference = '';
+        setUpdates([]);
+        setOutages([]);
       }
       setPortalData(refreshedPortalData);
       setOpenCasesCount(freshActive.length);
@@ -98,9 +110,11 @@ export function App() {
       if (freshOrders && freshOrders.length > 0) {
         const topStage = freshOrders[0].currentMilestone || freshOrders[0].status || 'In Provisioning';
         setOrdersStage(topStage.startsWith('In ') ? topStage : `In ${topStage}`);
+      } else {
+        setOrdersStage('None');
       }
       setUpdates(serviceNowRestService.getApprovedUpdates());
-      if (freshActive.length > 0 && (!selectedActiveCaseNum || selectedActiveCaseNum === 'CSM001245' || selectedActiveCaseNum === 'ALEONB0001007')) {
+      if (freshActive.length > 0 && (!selectedActiveCaseNum || !freshActive.some(c => c.caseNumber === selectedActiveCaseNum))) {
         setSelectedActiveCaseNum(freshActive[0].caseNumber);
       }
     } catch (err) {
@@ -114,6 +128,22 @@ export function App() {
     if (authenticated) {
       handleSyncBackend();
     }
+  }, [authenticated]);
+
+  React.useEffect(() => {
+    const handleCasesUpdatedGlobal = () => {
+      const active = serviceNowRestService.getActiveCases();
+      setOpenCasesCount(active.length);
+      setPortalData(serviceNowRestService.getPortalData());
+      if (authenticated) {
+        handleSyncBackend();
+      }
+    };
+
+    window.addEventListener('b2c_cases_updated', handleCasesUpdatedGlobal);
+    return () => {
+      window.removeEventListener('b2c_cases_updated', handleCasesUpdatedGlobal);
+    };
   }, [authenticated]);
 
   const unreadNotificationCount = notifications.filter(n => !n.isRead).length;
@@ -181,6 +211,7 @@ export function App() {
       updates={updates}
       onNavigate={go}
       onOpenVirtualAssistant={openVirtualAssistant}
+      onOpenNlqChat={() => setNlqChatOpen(true)}
       onSelectActiveCase={(caseNum) => setSelectedActiveCaseNum(caseNum)}
       onSyncCases={handleSyncBackend}
       isSyncing={isSyncing}
@@ -364,10 +395,12 @@ export function App() {
         <TopHeaderBar
           portalData={portalData}
           onNavigate={go}
+          onSelectActiveCase={(caseNum) => setSelectedActiveCaseNum(caseNum)}
           onLogout={handleLogout}
           mobileMenuOpen={mobileMenu}
           setMobileMenuOpen={setMobileMenu}
           unreadNotificationCount={unreadNotificationCount}
+          onOpenNlqChat={() => setNlqChatOpen(true)}
         />
 
         {/* Dynamic Page Container */}
@@ -425,20 +458,25 @@ export function App() {
 
 
 
+      {/* Top Navbar Modal: Now Assist for TSM (Autonomous NLQ Chat) */}
+      <ServiceNowAutonomousNLQChat
+        isOpen={nlqChatOpen}
+        onClose={() => setNlqChatOpen(false)}
+        customerName={portalData.customer || ''}
+        customerEmail={portalData.email || ''}
+      />
+
       {/* Right Bottom: Official ServiceNow Virtual Agent Portable Widget Client */}
       {/* <ServiceNowVirtualAgent key={authenticated ? "sn-va-auth" : "sn-va-guest"} /> */}
       <ServiceNowEnhancedChat
         customer={{
           name: portalData.customer || (typeof window !== 'undefined' ? (sessionStorage.getItem('sn_first_name') ? `${sessionStorage.getItem('sn_first_name')} ${sessionStorage.getItem('sn_last_name') || ''}`.trim() : null) : null) || 'Customer',
-          userName: (typeof window !== 'undefined' ? (sessionStorage.getItem('sn_username') || localStorage.getItem('sn_username')) : null) || 'customer.user',
-          email: portalData.email || (typeof window !== 'undefined' ? (sessionStorage.getItem('sn_email') || localStorage.getItem('sn_email')) : null) || 'customer@tataglobal.com',
-          accountName: portalData.account || 'Tata B2B Enterprise Services'
+          userName: (typeof window !== 'undefined' ? (sessionStorage.getItem('sn_username') || localStorage.getItem('sn_username')) : null) || '',
+          email: portalData.email || (typeof window !== 'undefined' ? (sessionStorage.getItem('sn_email') || localStorage.getItem('sn_email')) : null) || '',
+          accountName: portalData.account || ''
         }}
-        endpointUrl="https://tataamericaintlcorpdemo3.service-now.com/api/sn_itsm_gen_ai/b2c_telecom_selfcare/ai-chat"
+        endpointUrl={`${SERVICENOW_CONFIG.instanceUrl}/api/sn_itsm_gen_ai/b2c_telecom_selfcare/ai-chat`}
       />
-
-      {/* Left Bottom: Secondary Independent Virtual Agent Chat Widget */}
-      <ServiceNowNativeChatLeft />
 
     </div>
   );

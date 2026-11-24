@@ -45,8 +45,8 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
 }) => {
   const isCasesActive = ['cases', 'case-detail', 'create-case', 'history', 'closed-case'].includes(activePage);
   const displayedCasesCount = openCasesCount ?? serviceNowRestService.getActiveCases().length;
-  const displayedOrdersCount = ordersCount !== undefined && ordersCount > 0 ? ordersCount : 10;
-  const servicesCount = portalData.serviceMetrics?.total || (portalData.servicesList && portalData.servicesList.length > 0 ? portalData.servicesList.length : 25);
+  const displayedOrdersCount = ordersCount !== undefined ? ordersCount : 0;
+  const servicesCount = portalData.servicesList ? portalData.servicesList.length : 0;
 
   const navItems: Array<{
     id: PageType;

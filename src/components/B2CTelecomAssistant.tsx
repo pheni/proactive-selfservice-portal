@@ -1,5 +1,6 @@
 // src/components/B2CTelecomAssistant.tsx
 import React, { useState } from 'react';
+import { SERVICENOW_CONFIG } from '../config/servicenow.config';
 
 export interface PortalCustomer {
   name: string;
@@ -16,10 +17,11 @@ export const B2CTelecomAssistant: React.FC<B2CTelecomAssistantProps> = ({ custom
   const [isOpen, setIsOpen] = useState(false);
   const [sessionKey, setSessionKey] = useState(0);
 
+  const portal = serviceNowRestService.getPortalData();
   const activeCustomer: PortalCustomer = customer || {
-    name: 'Goutam Hazra',
-    email: 'goutam.hazra@tataglobal.com',
-    accountNumber: 'ACC-TATA-9941',
+    name: portal.customer || 'Customer',
+    email: portal.email || 'customer@enterprise-telecom.com',
+    accountNumber: portal.accountNumber || 'ACC-9941',
   };
 
   // Construct the ServiceNow Now Assist Web Client URL
@@ -42,7 +44,7 @@ export const B2CTelecomAssistant: React.FC<B2CTelecomAssistantProps> = ({ custom
       ...(activeCustomer.accountNumber ? { sysparm_account_number: activeCustomer.accountNumber } : {}),
     });
 
-    return `https://tataamericaintlcorpdemo3.service-now.com/$sn-va-web-client-app.do?${params.toString()}`;
+    return `${SERVICENOW_CONFIG.instanceUrl}/$sn-va-web-client-app.do?${params.toString()}`;
   };
 
   return (

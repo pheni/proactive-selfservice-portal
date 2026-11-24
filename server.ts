@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);
 async function startServer() {
   const app = express();
   const server = http.createServer(app);
-  const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+  const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3002;
 
   app.use(express.json());
 
@@ -37,7 +37,7 @@ async function startServer() {
       res.status(502).send("ServiceNow VA Proxy Error: " + err.message);
     }
   });
-  app.all(["/api/now/*", "/api/taair/*"], async (req, res) => {
+  app.all(["/api/now/*", "/api/taair/*", "/api/sn_itsm_gen_ai/*"], async (req, res) => {
     try {
       const targetUrl = `${SN_TARGET}${req.originalUrl}`;
       const headers: Record<string, string> = {

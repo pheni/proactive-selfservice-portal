@@ -1,0 +1,230 @@
+{
+  "source_instance": "https://dev475107.service-now.com",
+  "exported_at": "2026-11-12T17:48:00.000Z",
+  "version": "2.2.0-pure-gliderecord-grounded-now-assist",
+  "target_account": "Tata B2B Enterprise Services",
+  "plugins_required": [
+    {
+      "id": "com.snc.install_base",
+      "name": "Customer Service Install Base Management",
+      "provides": "sn_install_base_sold_product"
+    },
+    {
+      "id": "sn_ind_tmt_orm",
+      "name": "Order Management for Telecommunications (OMT)",
+      "provides": "sn_ind_tmt_orm_order"
+    },
+    {
+      "id": "sn_pss_core",
+      "name": "Customer Contracts and Entitlements",
+      "provides": "sn_pss_core_service_contract"
+    },
+    {
+      "id": "sn_sprb_mgmt",
+      "name": "Customer Service Problem Management",
+      "provides": "sn_sprb_mgmt_case"
+    },
+    {
+      "id": "sn_csm_playbook",
+      "name": "Playbooks for Customer Service Management",
+      "provides": "sys_playbook_experience"
+    },
+    {
+      "id": "sn_pro_cs_ops",
+      "name": "Proactive Customer Service Operations",
+      "provides": "proactive_analytics_event"
+    }
+  ],
+  "scripted_rest_apis": [
+    {
+      "name": "B2C Telecom Selfcare",
+      "service_id": "b2c_telecom_selfcare",
+      "namespace": "sn_itsm_gen_ai",
+      "base_uri": "/api/sn_itsm_gen_ai/b2c_telecom_selfcare",
+      "sys_id": "baea92d41be01b109ac94081b24bcb0f"
+    },
+    {
+      "name": "B2B Auth API",
+      "service_id": "b2b_auth_api",
+      "namespace": "taair",
+      "base_uri": "/api/taair/b2b_auth_api",
+      "sys_id": "a0d9fa101b281b109ac94081b24bcbf0"
+    }
+  ],
+  "operations_count": 18,
+  "operations": [
+    {
+      "name": "services",
+      "http_method": "GET",
+      "operation_uri": "/api/taair/b2b_auth_api/services",
+      "relative_path": "/services",
+      "web_service_definition": "B2B Auth API",
+      "sys_id": "031bb6d01b281b109ac94081b24bcb34",
+      "file": "scripted_rest_apis/b2b_auth_api/get_services.js"
+    },
+    {
+      "name": "orders",
+      "http_method": "GET",
+      "operation_uri": "/api/taair/b2b_auth_api/orders",
+      "relative_path": "/orders",
+      "web_service_definition": "B2B Auth API",
+      "sys_id": "121b76d01b281b109ac94081b24bcb99",
+      "file": "scripted_rest_apis/b2b_auth_api/get_orders.js"
+    },
+    {
+      "name": "ai-chat",
+      "http_method": "POST",
+      "operation_uri": "/api/sn_itsm_gen_ai/b2c_telecom_selfcare/ai-chat",
+      "relative_path": "/ai-chat",
+      "web_service_definition": "B2C Telecom Selfcare",
+      "sys_id": "188b16d01be01b109ac94081b24bcbdb",
+      "file": "scripted_rest_apis/b2c_telecom_selfcare/post_ai-chat.js"
+    },
+    {
+      "name": "outages",
+      "http_method": "GET",
+      "operation_uri": "/api/sn_itsm_gen_ai/b2c_telecom_selfcare/outages",
+      "relative_path": "/outages",
+      "web_service_definition": "B2C Telecom Selfcare",
+      "sys_id": "1f37ae901b641b109ac94081b24bcba3",
+      "file": "scripted_rest_apis/b2c_telecom_selfcare/get_outages.js"
+    },
+    {
+      "name": "confirm_restoration",
+      "http_method": "POST",
+      "operation_uri": "/api/taair/b2b_auth_api/confirm_restoration",
+      "relative_path": "/confirm_restoration",
+      "web_service_definition": "B2B Auth API",
+      "sys_id": "201bbe901b281b109ac94081b24bcb95",
+      "file": "scripted_rest_apis/b2b_auth_api/post_confirm_restoration.js"
+    },
+    {
+      "name": "create_case",
+      "http_method": "POST",
+      "operation_uri": "/api/taair/b2b_auth_api/create_case",
+      "relative_path": "/create_case",
+      "web_service_definition": "B2B Auth API",
+      "sys_id": "291b76d01b281b109ac94081b24bcba6",
+      "file": "scripted_rest_apis/b2b_auth_api/post_create_case.js"
+    },
+    {
+      "name": "native_va_chat",
+      "http_method": "POST",
+      "operation_uri": "/api/sn_itsm_gen_ai/b2c_telecom_selfcare/native_va_chat",
+      "relative_path": "/native_va_chat",
+      "web_service_definition": "B2C Telecom Selfcare",
+      "sys_id": "2a3b5ed41be01b109ac94081b24bcb84",
+      "file": "scripted_rest_apis/b2c_telecom_selfcare/post_native_va_chat.js"
+    },
+    {
+      "name": "invoices",
+      "http_method": "GET",
+      "operation_uri": "/api/taair/b2b_auth_api/invoices",
+      "relative_path": "/invoices",
+      "web_service_definition": "B2B Auth API",
+      "sys_id": "492bf6d01b281b109ac94081b24bcb88",
+      "file": "scripted_rest_apis/b2b_auth_api/get_invoices.js"
+    },
+    {
+      "name": "sla",
+      "http_method": "GET",
+      "operation_uri": "/api/sn_itsm_gen_ai/b2c_telecom_selfcare/sla",
+      "relative_path": "/sla",
+      "web_service_definition": "B2C Telecom Selfcare",
+      "sys_id": "58476e501b641b109ac94081b24bcb9c",
+      "file": "scripted_rest_apis/b2c_telecom_selfcare/get_sla.js"
+    },
+    {
+      "name": "account",
+      "http_method": "GET",
+      "operation_uri": "/api/taair/b2b_auth_api/account",
+      "relative_path": "/account",
+      "web_service_definition": "B2B Auth API",
+      "sys_id": "943b3e901b281b109ac94081b24bcb8d",
+      "file": "scripted_rest_apis/b2b_auth_api/get_account.js"
+    },
+    {
+      "name": "nlq-chat",
+      "http_method": "POST",
+      "operation_uri": "/api/sn_itsm_gen_ai/b2c_telecom_selfcare/nlq-chat",
+      "relative_path": "/nlq-chat",
+      "web_service_definition": "B2C Telecom Selfcare",
+      "sys_id": "97ce6b6c1b2c9b109ac94081b24bcbcd",
+      "file": "scripted_rest_apis/b2c_telecom_selfcare/post_nlq-chat.js"
+    },
+    {
+      "name": "sites",
+      "http_method": "GET",
+      "operation_uri": "/api/taair/b2b_auth_api/sites",
+      "relative_path": "/sites",
+      "web_service_definition": "B2B Auth API",
+      "sys_id": "a32bfad01b281b109ac94081b24bcb31",
+      "file": "scripted_rest_apis/b2b_auth_api/get_sites.js"
+    },
+    {
+      "name": "outages",
+      "http_method": "GET",
+      "operation_uri": "/api/taair/b2b_auth_api/outages",
+      "relative_path": "/outages",
+      "web_service_definition": "B2B Auth API",
+      "sys_id": "ae2bbad01b281b109ac94081b24bcb9c",
+      "file": "scripted_rest_apis/b2b_auth_api/get_outages.js"
+    },
+    {
+      "name": "cases",
+      "http_method": "GET",
+      "operation_uri": "/api/taair/b2b_auth_api/cases",
+      "relative_path": "/cases",
+      "web_service_definition": "B2B Auth API",
+      "sys_id": "ba7a7a501b281b109ac94081b24bcba6",
+      "file": "scripted_rest_apis/b2b_auth_api/get_cases.js"
+    },
+    {
+      "name": "services",
+      "http_method": "POST",
+      "operation_uri": "/api/sn_itsm_gen_ai/b2c_telecom_selfcare/services",
+      "relative_path": "/services",
+      "web_service_definition": "B2C Telecom Selfcare",
+      "sys_id": "c18b96181be01b109ac94081b24bcb7d",
+      "file": "scripted_rest_apis/b2c_telecom_selfcare/post_services.js"
+    },
+    {
+      "name": "login",
+      "http_method": "POST",
+      "operation_uri": "/api/taair/b2b_auth_api/login",
+      "relative_path": "/login",
+      "web_service_definition": "B2B Auth API",
+      "sys_id": "c53bfad01b281b109ac94081b24bcb2a",
+      "file": "scripted_rest_apis/b2b_auth_api/post_login.js"
+    },
+    {
+      "name": "sla",
+      "http_method": "GET",
+      "operation_uri": "/api/taair/b2b_auth_api/sla",
+      "relative_path": "/sla",
+      "web_service_definition": "B2B Auth API",
+      "sys_id": "d82bf6d01b281b109ac94081b24bcb9b",
+      "file": "scripted_rest_apis/b2b_auth_api/get_sla.js"
+    },
+    {
+      "name": "otto_chat_new",
+      "http_method": "POST",
+      "operation_uri": "/api/taair/b2b_auth_api/otto/chat_new",
+      "relative_path": "/otto/chat_new",
+      "web_service_definition": "B2B Auth API",
+      "sys_id": "f12b3ad01b281b109ac94081b24bcb99",
+      "file": "scripted_rest_apis/b2b_auth_api/post_otto_chat_new.js"
+    }
+  ],
+  "script_includes": [
+    {
+      "name": "B2CTelecomSelfcareSupport",
+      "api_name": "global.B2CTelecomSelfcareSupport",
+      "file": "script_includes/B2CTelecomSelfcareSupport.js"
+    }
+  ],
+  "data_exports": {
+    "sold_products_count": 25,
+    "orders_count": 10
+  }
+}

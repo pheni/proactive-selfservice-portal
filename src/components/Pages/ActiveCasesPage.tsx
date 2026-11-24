@@ -68,6 +68,22 @@ export const ActiveCasesPage: React.FC<ActiveCasesPageProps> = ({
 
   useEffect(() => {
     syncCases(false, false);
+
+    const handleCasesUpdated = () => {
+      setActiveCases([...serviceNowRestService.getActiveCases()]);
+      setClosedCases([...serviceNowRestService.getClosedCases()]);
+      if (onCasesUpdated) {
+        onCasesUpdated(serviceNowRestService.getActiveCases().length, serviceNowRestService.getClosedCases().length);
+      }
+      syncCases(false, true);
+    };
+
+    window.addEventListener('b2c_cases_updated', handleCasesUpdated);
+    window.addEventListener('storage', handleCasesUpdated);
+    return () => {
+      window.removeEventListener('b2c_cases_updated', handleCasesUpdated);
+      window.removeEventListener('storage', handleCasesUpdated);
+    };
   }, []);
 
   const filteredActiveCases = activeCases.filter(ac => {

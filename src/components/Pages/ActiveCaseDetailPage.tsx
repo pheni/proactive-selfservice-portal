@@ -18,7 +18,9 @@ Network,
   User, 
   Calendar,
   Activity,
-  FileText
+  FileText,
+  MessageSquare,
+  Send
 } from 'lucide-react';
 
 interface CaseActivityItem {
@@ -67,6 +69,12 @@ export const ActiveCaseDetailPage: React.FC<ActiveCaseDetailPageProps> = ({
   const [isEscalating, setIsEscalating] = useState(false);
   const [escalateSuccess, setEscalateSuccess] = useState(false);
 
+  // Add Comment / Post Update State
+  const [newCommentText, setNewCommentText] = useState('');
+  const [isUrgentComment, setIsUrgentComment] = useState(false);
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+  const [commentSuccess, setCommentSuccess] = useState(false);
+
   // Case Closure Modal & State
   const [isClosingModalOpen, setIsClosingModalOpen] = useState(false);
   const [isClosingCase, setIsClosingCase] = useState(false);
@@ -76,24 +84,24 @@ export const ActiveCaseDetailPage: React.FC<ActiveCaseDetailPageProps> = ({
   const defaultActivities: CaseActivityItem[] = [
     {
       id: 'act-reported',
-      author: activeCase.contact || portalData.customer,
+      author: activeCase.contact || portalData.customer || 'Customer',
       role: 'Customer',
       text: activeCase.description || 'Customer reported service disruption via self-care portal.',
-      timestamp: activeCase.openedTime || 'Initial Registration'
+      timestamp: activeCase.openedTime || 'Just now'
     },
     {
       id: 'act-init',
       author: 'Service Assurance Automation',
       role: 'System Automation',
       text: `Support case ${activeCase.caseNumber} initialized. Assigned to ${activeCase.queue || 'Service Assurance Support Queue'}.`,
-      timestamp: activeCase.openedTime || 'Case Triaged'
+      timestamp: activeCase.openedTime || 'Just now'
     }
   ];
 
   // Activity Stream History loaded from persistent store!
-  const [activityList, setActivityList] = useState<CaseActivityItem[]>(() => 
-    serviceNowRestService.getCaseActivities(activeCase.caseNumber, defaultActivities)
-  );
+  const [activityList, setActivityList] = useState<CaseActivityItem[]>(() => {
+    return serviceNowRestService.getCaseActivities(activeCase.caseNumber, defaultActivities);
+  });
   const [isRefreshingActivities, setIsRefreshingActivities] = useState(false);
 
   // Sync real-time journal comments & work notes from ServiceNow
@@ -171,6 +179,46 @@ export const ActiveCaseDetailPage: React.FC<ActiveCaseDetailPageProps> = ({
       console.error('Failed to escalate case:', err);
     } finally {
       setIsEscalating(false);
+    }
+  };
+
+  // Handle posting comment directly to ServiceNow DB
+  const handlePostComment = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const targetCaseNumber = activeCase?.caseNumber || caseId;
+    if (!newCommentText.trim() || isSubmittingComment || !targetCaseNumber) return;
+    setIsSubmittingComment(true);
+    try {
+      const commentToPost = newCommentText.trim();
+      const success = await serviceNowRestService.addCommentViaRest(
+        targetCaseNumber,
+        commentToPost,
+        isUrgentComment
+      );
+      if (success) {
+        setCommentSuccess(true);
+        setNewCommentText('');
+        setIsUrgentComment(false);
+
+        // Prepend immediately to local activity stream so it displays instantly
+        const nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const localActItem: CaseActivityItem = {
+          id: 'act_' + Date.now(),
+          author: portalData.customer || activeCase?.contact || 'Goutam Hazra',
+          role: 'Customer',
+          text: commentToPost,
+          timestamp: `Today, ${nowTime}`,
+          isUrgent: isUrgentComment
+        };
+        setActivityList(prev => [localActItem, ...prev]);
+
+        await refreshLiveActivities();
+        setTimeout(() => setCommentSuccess(false), 4000);
+      }
+    } catch (err) {
+      console.error('Failed to post comment:', err);
+    } finally {
+      setIsSubmittingComment(false);
     }
   };
 
@@ -450,6 +498,58 @@ export const ActiveCaseDetailPage: React.FC<ActiveCaseDetailPageProps> = ({
         
         {/* Left Column: Post Update & Activity Stream */}
         <div className="space-y-6">
+
+          {/* Post Customer Update Card */}
+          <Card className="p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
+                <MessageSquare className="h-4 w-4 text-teal-600" />
+                <span>Post Update / Add Comment</span>
+              </h3>
+              <span className="text-[11px] text-slate-400 font-medium">Persisted to ServiceNow DB</span>
+            </div>
+
+            <form onSubmit={handlePostComment} className="space-y-3">
+              <textarea
+                value={newCommentText}
+                onChange={(e) => setNewCommentText(e.target.value)}
+                placeholder="Type your operational update, telemetry observation, or response for the assigned engineering desk..."
+                rows={3}
+                className="w-full text-xs rounded-xl border border-slate-200 p-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition resize-none"
+              />
+
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-600">
+                  <input
+                    type="checkbox"
+                    checked={isUrgentComment}
+                    onChange={(e) => setIsUrgentComment(e.target.checked)}
+                    className="rounded border-slate-300 text-rose-600 focus:ring-rose-500 h-3.5 w-3.5"
+                  />
+                  <span className={isUrgentComment ? 'font-bold text-rose-600' : ''}>
+                    Mark as Urgent Update
+                  </span>
+                </label>
+
+                <button
+                  type="button"
+                  onClick={handlePostComment}
+                  disabled={!newCommentText.trim() || isSubmittingComment}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold transition shadow-xs disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  <Send className={`h-3.5 w-3.5 ${isSubmittingComment ? 'animate-pulse' : ''}`} />
+                  <span>{isSubmittingComment ? 'Posting...' : 'Post Update'}</span>
+                </button>
+              </div>
+
+              {commentSuccess && (
+                <div className="flex items-center gap-2 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 p-2.5 rounded-lg">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                  <span>Comment successfully posted and synced to ServiceNow Case journal!</span>
+                </div>
+              )}
+            </form>
+          </Card>
 
           {/* Activity Stream & Case History */}
           <Card className="p-6 space-y-4">

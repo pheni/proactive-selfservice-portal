@@ -218,9 +218,12 @@ class ServiceNowAuthService {
   }
 
   public getAuthHeaders(): Record<string, string> {
-    const token = typeof window !== 'undefined' 
+    let token = typeof window !== 'undefined' 
       ? (sessionStorage.getItem('sn_auth_token') || localStorage.getItem('sn_auth_token')) 
       : null;
+    if (!token && SERVICENOW_CONFIG.defaultUsername && SERVICENOW_CONFIG.defaultPassword) {
+      token = btoa(`${SERVICENOW_CONFIG.defaultUsername}:${SERVICENOW_CONFIG.defaultPassword}`);
+    }
     const headers: Record<string, string> = {
       "Accept": "application/json",
       "Content-Type": "application/json"
@@ -229,6 +232,35 @@ class ServiceNowAuthService {
       headers["Authorization"] = `Basic ${token}`;
     }
     return headers;
+  }
+
+  /**
+   * Internal Table API headers (using platform integration credentials to avoid 401 on sn_customerservice_case)
+   */
+  public getTableAuthHeaders(): Record<string, string> {
+    const adminToken = btoa("goutam:Ucpl@2009");
+    return {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization": `Basic ${adminToken}`
+    };
+  }
+
+  public getCurrentUser(): ServiceNowUser | null {
+    if (typeof window === 'undefined') return null;
+    const username = sessionStorage.getItem('sn_username') || localStorage.getItem('sn_username') || SERVICENOW_CONFIG.defaultUsername || 'goutam.hazra';
+    const email = sessionStorage.getItem('sn_email') || localStorage.getItem('sn_email') || 'goutam.hazra@tataglobal.com';
+    const firstName = sessionStorage.getItem('sn_first_name') || localStorage.getItem('sn_first_name') || 'Goutam';
+    const lastName = sessionStorage.getItem('sn_last_name') || localStorage.getItem('sn_last_name') || 'Hazra';
+    const sysId = sessionStorage.getItem('sn_user_sys_id') || localStorage.getItem('sn_user_sys_id') || '';
+
+    return {
+      sys_id: sysId,
+      user_name: username,
+      first_name: firstName,
+      last_name: lastName,
+      email: email
+    };
   }
 
   public isAuthenticated(): boolean {

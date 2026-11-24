@@ -30,7 +30,11 @@ import {
   Network,
   SlidersHorizontal,
   Layers,
-  ExternalLink
+  ExternalLink,
+  Sparkles,
+  Clock,
+  Server,
+  Cpu
 } from 'lucide-react';
 
 interface OverviewDashboardProps {
@@ -38,6 +42,7 @@ interface OverviewDashboardProps {
   updates: ApprovedUpdate[];
   onNavigate: (page: any, param?: string) => void;
   onOpenVirtualAssistant?: (context?: VirtualAssistantContext) => void;
+  onOpenNlqChat?: () => void;
   onSelectActiveCase?: (caseNum: string) => void;
   onSyncCases?: () => Promise<void>;
   isSyncing?: boolean;
@@ -56,6 +61,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
   updates,
   onNavigate,
   onOpenVirtualAssistant,
+  onOpenNlqChat,
   onSelectActiveCase,
   onSyncCases,
   isSyncing = false,
@@ -80,7 +86,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
   const affectedCount = affectedServices.length;
   const activeCases = serviceNowRestService.getActiveCases();
   const displayedOpenCasesCount = openCasesCount ?? activeCases.length;
-  const displayedOrdersCount = ordersCount !== undefined && ordersCount > 0 ? ordersCount : 10;
+  const displayedOrdersCount = ordersCount !== undefined ? ordersCount : 0;
   const wanCount = services.filter(s => (s.category && s.category.includes('WAN')) || (s.name && (s.name.includes('MPLS') || s.name.includes('Optical')))).length;
   const cloudCount = services.filter(s => (s.category && s.category.includes('Cloud')) || (s.name && (s.name.includes('Cloud') || s.name.includes('DirectConnect')))).length;
   const otherCount = Math.max(0, totalServices - (wanCount + cloudCount));
@@ -132,7 +138,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
         location: svc.location,
         status: isP1 ? 'Critical Outage' : 'Degraded Performance',
         statusTone: isP1 ? 'red' : 'amber',
-        caseNumber: svc.activeCaseNumber || matchingCase?.caseNumber || (isP1 ? 'ALEONB0001007' : 'CSM001289'),
+        caseNumber: svc.activeCaseNumber || matchingCase?.caseNumber || topOutage?.case_number || undefined,
         description: isP1
           ? 'Proactive optical signal attenuation & packet loss detected on primary carrier drop.'
           : 'BGP peering route flap & jitter elevation detected across secondary routing path.',
@@ -187,7 +193,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
   const dynamicUpdates = useMemo(() => {
     const isDegraded = currentSpotlightService.status !== 'Operational' && currentSpotlightService.status !== 'Restored';
     const cktId = currentSpotlightService.circuitId || currentSpotlightService.id;
-    const caseNum = currentSpotlightService.activeCaseNumber || (isDegraded ? (topOutage?.case_number || 'CS0001264') : undefined);
+    const caseNum = currentSpotlightService.activeCaseNumber || (isDegraded ? topOutage?.case_number : undefined);
 
     if (isDegraded) {
       const techText = topOutage?.technician_status 
@@ -214,7 +220,7 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
           title: "Assurance Incident Opened",
           category: "Telemetry",
           categoryTone: "red" as const,
-          text: 'Proactive incident ' + (caseNum || 'CS0001264') + ' registered in ServiceNow: packet loss exceeded 5% carrier SLA threshold (measured ' + (currentSpotlightService.packetLoss || '14.8%') + ').',
+          text: 'Proactive incident ' + (caseNum ? ('#' + caseNum) : 'assurance case') + ' registered in ServiceNow: packet loss exceeded 5% carrier SLA threshold (measured ' + (currentSpotlightService.packetLoss || '14.8%') + ').',
           time: "10:01 AM"
         }
       ];
@@ -544,152 +550,299 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
         </div>
       </div>
 
-      {/* Main Grid: Spotlighted Service & Harmonized Recent Updates */}
-      <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
-        
-        {/* Spotlighted Circuit / Service Diagnostics Console */}
-        <Card className="overflow-hidden">
-          <div className={`h-1.5 ${isSpotlightDegraded ? 'bg-gradient-to-r from-amber-400 to-rose-500' : 'bg-emerald-500'}`} />
-          <div className="p-6">
-            <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex items-start gap-4">
-                <div className={`rounded-2xl p-3 font-bold text-xs shrink-0 ${
-                  currentSpotlightService.category === 'Router' ? 'bg-blue-50 text-blue-700' :
-                  currentSpotlightService.category === 'SD-WAN' ? 'bg-purple-50 text-purple-700' :
-                  currentSpotlightService.category === 'Cloud Connect' ? 'bg-teal-50 text-teal-700' :
-                  'bg-emerald-50 text-emerald-700'
-                }`}>
-                  {currentSpotlightService.category || 'Service'}
-                </div>
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-lg font-bold text-slate-900">{currentSpotlightService.name}</h3>
-                    <Badge tone={isSpotlightDegraded ? (currentSpotlightService.status === 'Critical' ? 'red' : 'amber') : "green"}>
-                      {currentSpotlightService.status}
-                    </Badge>
-                  </div>
-                  <div className="mt-1 text-xs text-slate-500">
-                    Managed service · {currentSpotlightService.bandwidth} · {currentSpotlightService.circuitId || currentSpotlightService.id}
-                  </div>
-                </div>
-              </div>
+      {/* Unified NOC Command Center: Active Incident & Circuit Diagnostics */}
+      <Card className="overflow-hidden border border-slate-200/90 shadow-sm rounded-2xl bg-white">
+        {/* Accent Bar */}
+        <div className={`h-1.5 ${isSpotlightDegraded ? 'bg-gradient-to-r from-amber-500 via-rose-500 to-red-600' : 'bg-gradient-to-r from-emerald-500 to-teal-600'}`} />
 
-              <div className="flex flex-wrap items-center gap-2">
-                {onOpenVirtualAssistant && (
-                  <Button
-                    variant="outline"
-                    className="text-xs py-2 px-3 flex items-center gap-1.5 border-teal-500/40 text-teal-800 bg-teal-50/70 hover:bg-teal-100/80"
-                    onClick={() => onOpenVirtualAssistant({
-                      caseNumber: currentSpotlightService.activeCaseNumber || currentAlert?.caseNumber,
-                      serviceName: currentSpotlightService.name,
-                      status: currentSpotlightService.status
-                    })}
-                  >
-                    <Bot className="h-3.5 w-3.5 text-teal-600" />
-                    <span>Ask Digital Assistant</span>
-                  </Button>
-                )}
-                <Button variant="outline" className="text-xs py-2 px-3" onClick={() => onNavigate('service-detail')}>
-                  View service details
-                </Button>
-                {currentSpotlightService.activeCaseNumber ? (
-                  <Button 
-                    variant="primary" 
-                    className="text-xs py-2 px-3 shadow-xs font-semibold" 
-                    onClick={() => {
-                      if (onSelectActiveCase) onSelectActiveCase(currentSpotlightService.activeCaseNumber!);
-                      onNavigate('case-detail');
-                    }}
-                  >
-                    View Case {currentSpotlightService.activeCaseNumber}
-                  </Button>
-                ) : (
-                  <Button 
-                    variant="teal" 
-                    className="text-xs py-2 px-3 shadow-xs font-semibold" 
-                    onClick={() => onNavigate('create-case', currentSpotlightService.id)}
-                  >
-                    + Raise Support Case
-                  </Button>
-                )}
+        {/* Top Context Bar */}
+        <div className="p-4 sm:px-6 bg-slate-50/90 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-black tracking-wide uppercase ${
+              isSpotlightDegraded
+                ? (currentSpotlightService.status === 'Critical' ? 'bg-rose-100 text-rose-800 border border-rose-200' : 'bg-amber-100 text-amber-800 border border-amber-200')
+                : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+            }`}>
+              <span className={`h-2 w-2 rounded-full ${
+                isSpotlightDegraded ? 'bg-rose-600 animate-pulse' : 'bg-emerald-600'
+              }`} />
+              <span>{isSpotlightDegraded ? `${currentAlert?.priority || 'P1'} ${currentSpotlightService.status.toUpperCase()} INCIDENT` : 'NORMAL OPERATIONS'}</span>
+            </div>
+
+            <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-800 shadow-2xs">
+              {currentSpotlightService.circuitId || currentSpotlightService.id}
+            </span>
+
+            <span className="text-xs text-slate-500 font-medium hidden sm:inline">
+              {currentSpotlightService.category || 'Core WAN & Circuits'}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {isSpotlightDegraded ? (
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-700 bg-white px-3 py-1 rounded-lg border border-slate-200 shadow-2xs">
+                <Clock className="h-3.5 w-3.5 text-rose-600 animate-pulse" />
+                <span>SLA Target: <b className="text-rose-700 font-mono font-bold">{currentAlert?.slaRemaining || '38m remaining'}</b></span>
+                <span className="text-slate-300">|</span>
+                <span className="text-[11px] text-slate-500">Tier-1 MTTR: 4h Max</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 text-xs font-medium text-emerald-800 bg-white px-3 py-1 rounded-lg border border-emerald-200 shadow-2xs">
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                <span>SLA Compliance: <b className="font-mono font-bold">99.98%</b> (Tier-1 Platinum)</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* 3-Column Core Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-slate-100">
+          
+          {/* Column 1: Demarcation & Infrastructure Context */}
+          <div className="lg:col-span-4 p-5 flex flex-col justify-between space-y-4">
+            <div>
+              <div className="text-[10px] font-bold tracking-wider uppercase text-slate-400">Demarcation & Asset Context</div>
+              <h3 className="text-base font-bold text-slate-900 mt-1 leading-snug">{currentSpotlightService.name}</h3>
+              <div className="mt-0.5 text-xs text-slate-500">
+                Managed Service · {currentSpotlightService.bandwidth} · {currentSpotlightService.location}
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-2 gap-4 text-xs sm:grid-cols-4 pt-4 border-t border-slate-100">
-              {[
-                ["Location", currentSpotlightService.location],
-                ["Availability", currentSpotlightService.availability],
-                ["Latency / Loss", `${currentSpotlightService.latency} · ${currentSpotlightService.packetLoss}`],
-                ["Active Assurance Ticket", currentSpotlightService.activeCaseNumber || "None (Fully Operational)"]
-              ].map(([label, value]) => (
-                <div key={label}>
-                  <div className="text-[11px] font-medium text-slate-500">{label}</div>
-                  {label === 'Active Assurance Ticket' && currentSpotlightService.activeCaseNumber ? (
-                    <button
-                      onClick={() => {
-                        if (onSelectActiveCase) onSelectActiveCase(currentSpotlightService.activeCaseNumber!);
-                        onNavigate('case-detail');
-                      }}
-                      className="mt-1 block font-bold text-xs text-rose-600 font-mono hover:underline"
-                    >
-                      {value}
-                    </button>
-                  ) : (
-                    <b className="mt-1 block font-bold text-slate-900 text-xs">{value}</b>
-                  )}
+            <div className="space-y-2 bg-slate-50/80 p-3 rounded-xl border border-slate-100 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500 text-[11px] flex items-center gap-1.5">
+                  <Server className="h-3 w-3 text-slate-400" /> PE Demarc Router
+                </span>
+                <span className="font-mono font-semibold text-slate-800 text-[11px]">Cisco ASR 9001 (PE-BLR-01)</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500 text-[11px] flex items-center gap-1.5">
+                  <Cpu className="h-3 w-3 text-slate-400" /> Interface / Port
+                </span>
+                <span className="font-mono font-semibold text-slate-800 text-[11px]">TenGigE 0/0/0/1 (SFP+ LR)</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500 text-[11px] flex items-center gap-1.5">
+                  <Radio className="h-3 w-3 text-slate-400" /> Carrier Fiber Drop
+                </span>
+                <span className="font-mono font-semibold text-slate-800 text-[11px]">Dark Fiber Tail A/B (Protected)</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500 text-[11px] flex items-center gap-1.5">
+                  <Activity className="h-3 w-3 text-slate-400" /> SLA Availability
+                </span>
+                <span className={`font-mono font-bold text-[11px] ${isSpotlightDegraded ? 'text-rose-600' : 'text-emerald-600'}`}>
+                  {currentSpotlightService.availability || (isSpotlightDegraded ? '94.2%' : '99.98%')}
+                </span>
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-slate-100 text-xs flex items-center justify-between">
+              <span className="text-slate-500 text-[11px]">Active Ticket:</span>
+              {currentSpotlightService.activeCaseNumber ? (
+                <button
+                  onClick={() => {
+                    if (onSelectActiveCase) onSelectActiveCase(currentSpotlightService.activeCaseNumber!);
+                    onNavigate('case-detail');
+                  }}
+                  className="font-mono font-bold text-rose-600 hover:underline flex items-center gap-1"
+                >
+                  <span>{currentSpotlightService.activeCaseNumber}</span>
+                  <ArrowUpRight className="h-3 w-3" />
+                </button>
+              ) : (
+                <span className="font-semibold text-emerald-700 text-[11px]">Zero Incidents (Nominal)</span>
+              )}
+            </div>
+          </div>
+
+          {/* Column 2: Live Telemetry & Failover */}
+          <div className="lg:col-span-4 p-5 flex flex-col justify-between space-y-4 bg-slate-50/30">
+            <div>
+              <div className="text-[10px] font-bold tracking-wider uppercase text-slate-400">Live Telemetry & Redundancy</div>
+              <div className="flex items-center justify-between mt-1">
+                <span className="text-xs font-bold text-slate-800">Carrier Interface Telemetry</span>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  isSpotlightDegraded ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                }`}>
+                  {isSpotlightDegraded ? 'Anomaly Detected' : 'All Metrics Nominal'}
+                </span>
+              </div>
+            </div>
+
+            {/* Packet Loss bar with SLA 5% threshold marker */}
+            <div className="space-y-1">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-500 font-medium">Packet Loss:</span>
+                <span className={`font-mono font-bold ${isSpotlightDegraded ? 'text-rose-600' : 'text-slate-800'}`}>
+                  {currentSpotlightService.packetLoss || (isSpotlightDegraded ? '12.4%' : '0.0%')}
+                  <span className="text-[10px] font-normal text-slate-400 ml-1">(Carrier Max 5.0%)</span>
+                </span>
+              </div>
+              <div className="relative h-2 rounded-full bg-slate-200 overflow-hidden">
+                <div 
+                  className={`h-full rounded-full transition-all duration-500 ${
+                    isSpotlightDegraded ? 'bg-rose-500 w-[62%]' : 'bg-emerald-500 w-[2%]'
+                  }`}
+                />
+                <div className="absolute top-0 bottom-0 left-[25%] w-0.5 bg-slate-400/80 z-10" title="5% SLA Threshold" />
+              </div>
+              <div className="flex justify-between text-[9px] text-slate-400 font-mono">
+                <span>0%</span>
+                <span className="text-slate-500 font-semibold">5% SLA Limit</span>
+                <span>20%</span>
+              </div>
+            </div>
+
+            {/* Latency & Optical Power stats */}
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="p-2.5 rounded-lg bg-white border border-slate-200/80 shadow-2xs">
+                <div className="text-[10px] font-medium text-slate-400">Round-Trip Latency</div>
+                <div className="mt-0.5 font-mono font-bold text-slate-900 text-sm">
+                  {currentSpotlightService.latency ? currentSpotlightService.latency.replace(/Elevated|\(|\)/g, '').trim() : (isSpotlightDegraded ? '118ms' : '12ms')}
+                </div>
+                <div className="text-[10px] text-slate-500 mt-0.5">
+                  {isSpotlightDegraded ? 'Baseline: 14ms (Spike)' : 'Baseline: 14ms (Stable)'}
+                </div>
+              </div>
+
+              <div className="p-2.5 rounded-lg bg-white border border-slate-200/80 shadow-2xs">
+                <div className="text-[10px] font-medium text-slate-400">Optical Rx Power</div>
+                <div className={`mt-0.5 font-mono font-bold text-sm ${isSpotlightDegraded ? 'text-amber-700' : 'text-slate-900'}`}>
+                  {isSpotlightDegraded ? '-24.8 dBm' : '-14.2 dBm'}
+                </div>
+                <div className="text-[10px] text-slate-500 mt-0.5">
+                  {isSpotlightDegraded ? 'High Attenuation' : 'Optimal (-8 to -18 dBm)'}
+                </div>
+              </div>
+            </div>
+
+            {/* Redundancy / Failover state */}
+            <div className="p-2.5 rounded-lg bg-white border border-slate-200/80 text-xs shadow-2xs">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold text-slate-500 uppercase">Dual-Edge Redundancy</span>
+                <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded ${
+                  isSpotlightDegraded ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'
+                }`}>
+                  {isSpotlightDegraded ? 'Failover Engaged' : 'Standby Ready'}
+                </span>
+              </div>
+              <p className="mt-1 text-[11px] text-slate-600 leading-snug">
+                {isSpotlightDegraded 
+                  ? 'Secondary 1 Gbps WAN link carrying 88% offloaded traffic via BGP path prepending.'
+                  : 'Primary trunk fully operational; secondary redundant path synchronized and standing by.'}
+              </p>
+            </div>
+          </div>
+
+          {/* Column 3: Engineering Dispatch Stream */}
+          <div className="lg:col-span-4 p-5 flex flex-col justify-between space-y-3">
+            <div>
+              <div className="flex items-center justify-between">
+                <div className="text-[10px] font-bold tracking-wider uppercase text-slate-400">Engineering Dispatch Stream</div>
+                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
+                  isSpotlightDegraded 
+                    ? 'text-amber-800 bg-amber-50 border-amber-200' 
+                    : 'text-teal-700 bg-teal-50 border-teal-200/60'
+                }`}>
+                  {isSpotlightDegraded ? 'Active Diagnostic' : 'Live Assurance'}
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 mt-0.5">Telemetry log for {currentSpotlightService.circuitId || currentSpotlightService.id}</p>
+            </div>
+
+            <div className="relative pl-4 space-y-2.5 before:absolute before:left-1.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
+              {dynamicUpdates.map((upd, idx) => (
+                <div
+                  key={idx}
+                  onClick={() => {
+                    if (currentSpotlightService.activeCaseNumber && onSelectActiveCase) {
+                      onSelectActiveCase(currentSpotlightService.activeCaseNumber);
+                      onNavigate('case-detail');
+                    }
+                  }}
+                  className="relative cursor-pointer group"
+                >
+                  <span className={`absolute -left-4 top-1.5 h-2 w-2 rounded-full ring-2 ring-white ${
+                    upd.categoryTone === 'green' ? 'bg-emerald-500' :
+                    upd.categoryTone === 'blue' ? 'bg-blue-500' :
+                    upd.categoryTone === 'red' ? 'bg-red-500 animate-pulse' :
+                    'bg-amber-500'
+                  }`} />
+                  <div className="p-2.5 rounded-lg bg-slate-50 group-hover:bg-slate-100/90 transition border border-slate-100 group-hover:border-teal-200">
+                    <div className="flex items-center justify-between text-xs">
+                      <b className="font-bold text-slate-900 group-hover:text-teal-700 transition text-[11px]">{upd.title}</b>
+                      <Badge tone={upd.categoryTone as any}>{upd.category}</Badge>
+                    </div>
+                    <p className="mt-1 text-[11px] text-slate-600 leading-snug line-clamp-2">{upd.text}</p>
+                    <span className="mt-1 block text-[9px] text-slate-400 font-mono">Today, {upd.time}</span>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
-        </Card>
 
-        {/* Harmonized Telemetry Updates feed (no more contradiction!) */}
-        <Card className="p-5">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-sm font-bold text-slate-900">Incident & Health Telemetry</h3>
-              <p className="text-[11px] text-slate-500">Synchronized with {currentSpotlightService.id}</p>
-            </div>
-            <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${
-              isSpotlightDegraded 
-                ? 'text-amber-800 bg-amber-50 border-amber-200' 
-                : 'text-teal-700 bg-teal-50 border-teal-200/60'
-            }`}>
-              {isSpotlightDegraded ? 'Active Diagnostic' : 'Live Assurance'}
-            </span>
+        </div>
+
+        {/* Bottom Action Bar */}
+        <div className="bg-slate-50/90 border-t border-slate-100 px-6 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-xs text-slate-500">
+            <Activity className="h-3.5 w-3.5 text-teal-600 animate-pulse" />
+            <span>Carrier Telemetry: <b>Active</b> · Refreshed 15s ago via ServiceNow TSM Telemetry</span>
           </div>
-          <div className="relative pl-5 space-y-3 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
-            {dynamicUpdates.map((upd, idx) => (
-              <div
-                key={idx}
+
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Button
+              variant="outline"
+              className="text-xs py-2 px-3.5 font-medium border-purple-200 bg-purple-50/70 hover:bg-purple-100/80 text-purple-900 flex items-center gap-1.5 shadow-2xs"
+              onClick={() => {
+                if (onOpenNlqChat) {
+                  onOpenNlqChat();
+                } else if (onOpenVirtualAssistant) {
+                  onOpenVirtualAssistant({
+                    caseNumber: currentSpotlightService.activeCaseNumber || currentAlert?.caseNumber,
+                    serviceName: currentSpotlightService.name,
+                    status: currentSpotlightService.status
+                  });
+                }
+              }}
+            >
+              <Sparkles className="h-3.5 w-3.5 text-purple-600" />
+              <span>Ask Now Assist</span>
+            </Button>
+
+            <Button
+              variant="outline"
+              className="text-xs py-2 px-3.5 font-medium border-slate-200 hover:border-slate-300 text-slate-700 bg-white shadow-2xs flex items-center gap-1.5"
+              onClick={() => onNavigate('service-detail')}
+            >
+              <span>Full Circuit Diagnostics</span>
+            </Button>
+
+            {currentSpotlightService.activeCaseNumber ? (
+              <Button 
+                variant="primary" 
+                className="text-xs py-2 px-4 shadow-xs font-semibold flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white" 
                 onClick={() => {
-                  if (currentSpotlightService.activeCaseNumber && onSelectActiveCase) {
-                    onSelectActiveCase(currentSpotlightService.activeCaseNumber);
-                    onNavigate('case-detail');
-                  }
+                  if (onSelectActiveCase) onSelectActiveCase(currentSpotlightService.activeCaseNumber!);
+                  onNavigate('case-detail');
                 }}
-                className="relative cursor-pointer group"
               >
-                <span className={`absolute -left-5 top-1.5 h-2.5 w-2.5 rounded-full ring-2 ring-white ${
-                  upd.categoryTone === 'green' ? 'bg-emerald-500' :
-                  upd.categoryTone === 'blue' ? 'bg-blue-500' :
-                  upd.categoryTone === 'red' ? 'bg-red-500 animate-pulse' :
-                  'bg-amber-500'
-                }`} />
-                <div className="p-3 rounded-xl bg-slate-50 group-hover:bg-slate-100/90 transition border border-slate-100 group-hover:border-teal-200">
-                  <div className="flex items-center justify-between text-xs">
-                    <b className="font-bold text-slate-900 group-hover:text-teal-700 transition">{upd.title}</b>
-                    <Badge tone={upd.categoryTone as any}>{upd.category}</Badge>
-                  </div>
-                  <p className="mt-1 text-xs text-slate-600 leading-relaxed">{upd.text}</p>
-                  <span className="mt-1 block text-[10px] text-slate-400 font-mono">Today, {upd.time}</span>
-                </div>
-              </div>
-            ))}
+                <span>View Case {currentSpotlightService.activeCaseNumber}</span>
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </Button>
+            ) : (
+              <Button 
+                variant="teal" 
+                className="text-xs py-2 px-4 shadow-xs font-semibold flex items-center gap-1.5" 
+                onClick={() => onNavigate('create-case', currentSpotlightService.id)}
+              >
+                <span>+ Raise Support Case</span>
+              </Button>
+            )}
           </div>
-        </Card>
-
-      </div>
+        </div>
+      </Card>
 
       {/* Unified Telecom Estate & Infrastructure Portfolio */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

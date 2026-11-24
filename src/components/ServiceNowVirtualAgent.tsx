@@ -19,12 +19,17 @@ export default function ServiceNowVirtualAgent() {
   const currentUsername = 
     (typeof window !== "undefined" 
       ? (sessionStorage.getItem("sn_username") || localStorage.getItem("sn_username")) 
-      : null) || "goutam.hazra";
+      : null) || SERVICENOW_CONFIG.defaultUsername;
 
   const currentUserEmail = 
     (typeof window !== "undefined" 
       ? (sessionStorage.getItem("sn_email") || localStorage.getItem("sn_email")) 
-      : null) || "goutam.hazra@tataglobal.com";
+      : null) || `${SERVICENOW_CONFIG.defaultUsername}@tataglobal.com`;
+
+  const currentFullName = 
+    (typeof window !== "undefined" 
+      ? (sessionStorage.getItem("sn_user_fullname") || localStorage.getItem("sn_user_fullname") || sessionStorage.getItem("sn_first_name"))
+      : null) || currentUsername;
 
   const instance = SERVICE_NOW_URL.replace(/\/$/, "");
 
@@ -138,7 +143,7 @@ export default function ServiceNowVirtualAgent() {
           <div className="px-3 py-1 bg-slate-100 border-b border-slate-200/80 flex items-center justify-between text-[11px] text-slate-600 select-none">
             <span className="flex items-center space-x-1">
               <span>Customer:</span>
-              <strong className="text-slate-800">Goutam Hazra</strong>
+              <strong className="text-slate-800">{currentFullName}</strong>
             </span>
             <button
               type="button"

@@ -1,0 +1,227 @@
+[
+  {
+    "sys_id": "0b86853c1b209f109ac94081b24bcb12",
+    "number": "CKT-DEL-SD-02",
+    "name": "Secondary SD-WAN Gateway",
+    "state": "active",
+    "monthly_recurring_price": "8600",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "0ea6893c1b209f109ac94081b24bcb95",
+    "number": "MOB-LINE-982009",
+    "name": "Hyderabad R&D Lab Gateway SIM",
+    "state": "active",
+    "monthly_recurring_price": "150",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "1296093c1b209f109ac94081b24bcb2d",
+    "number": "SIP-DEL-TRK-02",
+    "name": "Delhi Enterprise Voice Trunk",
+    "state": "active",
+    "monthly_recurring_price": "3800",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "2ca6493c1b209f109ac94081b24bcb62",
+    "number": "MOB-LINE-982004",
+    "name": "Supply Chain Tracker Line 2",
+    "state": "active",
+    "monthly_recurring_price": "90",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "3596c53c1b209f109ac94081b24bcbf7",
+    "number": "SIP-MUM-TRK-01",
+    "name": "Mumbai Primary Voice SIP Trunk",
+    "state": "active",
+    "monthly_recurring_price": "4200",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "3f96093c1b209f109ac94081b24bcbef",
+    "number": "MOB-LINE-982002",
+    "name": "Executive Roaming 5G SIM",
+    "state": "active",
+    "monthly_recurring_price": "180",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "4196c53c1b209f109ac94081b24bcb62",
+    "number": "CKT-CHE-CC-01",
+    "name": "Chennai OMR Dedicated Fiber",
+    "state": "active",
+    "monthly_recurring_price": "5400",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "5da6493c1b209f109ac94081b24bcbf7",
+    "number": "MOB-LINE-982007",
+    "name": "IT Infrastructure Standby SIM",
+    "state": "active",
+    "monthly_recurring_price": "120",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "75a6893c1b209f109ac94081b24bcb78",
+    "number": "MOB-LINE-982008",
+    "name": "Field Testing Diagnostic SIM",
+    "state": "active",
+    "monthly_recurring_price": "120",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "8c96853c1b209f109ac94081b24bcbcc",
+    "number": "CKT-PUN-001",
+    "name": "Pune Delivery Center MPLS",
+    "state": "active",
+    "monthly_recurring_price": "7800",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "8f96093c1b209f109ac94081b24bcb9c",
+    "number": "SIP-CHE-TRK-05",
+    "name": "Chennai Global Support Trunk",
+    "state": "active",
+    "monthly_recurring_price": "4100",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "ae96093c1b209f109ac94081b24bcb62",
+    "number": "SIP-BLR-TRK-03",
+    "name": "Bangalore Cloud Contact Center Trunk",
+    "state": "active",
+    "monthly_recurring_price": "5600",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "b4a6493c1b209f109ac94081b24bcbb1",
+    "number": "MOB-LINE-982005",
+    "name": "APAC Roaming Corporate SIM",
+    "state": "active",
+    "monthly_recurring_price": "180",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "be96093c1b209f109ac94081b24bcb7f",
+    "number": "SIP-HYD-TRK-04",
+    "name": "Hyderabad Support Line Trunk",
+    "state": "active",
+    "monthly_recurring_price": "3200",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "bf86853c1b209f109ac94081b24bcbaf",
+    "number": "CKT-HYD-01",
+    "name": "Hyderabad R&D Link",
+    "state": "active",
+    "monthly_recurring_price": "6400",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "c4a6493c1b209f109ac94081b24bcb20",
+    "number": "MOB-LINE-982003",
+    "name": "Supply Chain Tracker Line 1",
+    "state": "active",
+    "monthly_recurring_price": "90",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "cda6493c1b209f109ac94081b24bcbc1",
+    "number": "MOB-LINE-982006",
+    "name": "NOC On-Call Escalation SIM",
+    "state": "active",
+    "monthly_recurring_price": "150",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "d096c53c1b209f109ac94081b24bcb0f",
+    "number": "DIA-MUM-01",
+    "name": "Enterprise Dedicated Internet DIA",
+    "state": "active",
+    "monthly_recurring_price": "5200",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "d2a6893c1b209f109ac94081b24bcbb4",
+    "number": "MOB-LINE-982010",
+    "name": "Warehouse Automation SIM",
+    "state": "active",
+    "monthly_recurring_price": "90",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "db86853c1b209f109ac94081b24bcb54",
+    "number": "CKT-BLR-SD-01",
+    "name": "Tech Park SD-WAN Hub",
+    "state": "active",
+    "monthly_recurring_price": "9200",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "dd96c53c1b209f109ac94081b24bcb97",
+    "number": "CKT-SGP-01",
+    "name": "Singapore Cross-Border Gateway",
+    "state": "active",
+    "monthly_recurring_price": "16800",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "e096c53c1b209f109ac94081b24bcb2c",
+    "number": "DIA-BLR-02",
+    "name": "Whitefield Campus Fiber",
+    "state": "active",
+    "monthly_recurring_price": "4800",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "e396093c1b209f109ac94081b24bcbdf",
+    "number": "MOB-LINE-982001",
+    "name": "Field Ops 5G Unlimited SIM",
+    "state": "active",
+    "monthly_recurring_price": "120",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "e5460df81b209f109ac94081b24bcb3f",
+    "number": "CKT-MUM-DC-01",
+    "name": "Primary 10G Ultra-Low Latency Core Optical Ring",
+    "state": "active",
+    "monthly_recurring_price": "14200",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  },
+  {
+    "sys_id": "ed96c53c1b209f109ac94081b24bcbb4",
+    "number": "CKT-PUN-DIA",
+    "name": "Pune High-Speed Internet DIA",
+    "state": "active",
+    "monthly_recurring_price": "3600",
+    "account": "Tata B2B Enterprise Services",
+    "contact": "Goutam Hazra"
+  }
+]

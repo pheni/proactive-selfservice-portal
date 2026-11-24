@@ -29,7 +29,7 @@ class ServiceNowOttoService {
   ): Promise<OttoQueryResponse> {
     // Extract case number if explicitly mentioned in the user's prompt (e.g. CS0001244)
     const promptCaseMatch = prompt.match(/\b(CS\d+|CSM\d+|INC\d+)\b/i);
-    const activeCase = promptCaseMatch ? promptCaseMatch[1].toUpperCase() : (context.caseNumber || 'CSM001245');
+    const activeCase = promptCaseMatch ? promptCaseMatch[1].toUpperCase() : (context.caseNumber || '');
     const activeService = context.serviceName || 'Dedicated Internet Access';
     const activeStatus = context.status || 'Monitoring';
 
@@ -151,7 +151,7 @@ class ServiceNowOttoService {
     context: OttoContext,
     actionKey?: string
   ): OttoQueryResponse {
-    const activeCase = context.caseNumber || 'CSM001245';
+    const activeCase = context.caseNumber || '';
     const activeService = context.serviceName || 'Dedicated Internet Access';
     const activeStatus = context.status || 'Monitoring';
 

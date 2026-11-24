@@ -83,22 +83,25 @@ export const BillingPage: React.FC<BillingPageProps> = ({
 
   // Invoice Ledger
   const [invoices] = useState<InvoiceLedgerItem[]>(() => {
+    if (portalData.account === 'No Account Associated' || (portalData.invoices && portalData.invoices.length === 0)) {
+      return [];
+    }
     return portalData.invoices || serviceNowRestService.getInvoiceLedger();
   });
 
   const latestBill = invoices[0] || {
-    id: 'INV-2026-003',
-    billingPeriod: 'October 2026',
-    amount: 8420.50,
-    currency: 'GBP',
-    status: 'Paid',
-    dueDate: '28 Oct 2026',
-    paymentMethod: 'BACS Direct Debit (•••• 4920)',
+    id: 'None',
+    billingPeriod: 'N/A',
+    amount: 0,
+    currency: 'USD',
+    status: 'None',
+    dueDate: 'N/A',
+    paymentMethod: 'None',
     breakdown: {
-      fixedCircuits: 4200.00,
-      mobileFleet: 2850.00,
-      fiberBroadband: 1100.00,
-      usageAddons: 270.50
+      fixedCircuits: 0,
+      mobileFleet: 0,
+      fiberBroadband: 0,
+      usageAddons: 0
     }
   };
 
@@ -575,57 +578,65 @@ export const BillingPage: React.FC<BillingPageProps> = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 bg-white">
-              {filteredInvoices.map((inv) => (
-                <tr key={inv.id} className="hover:bg-slate-50/70 transition">
-                  <td className="py-3 px-4 font-mono font-bold text-slate-900">
-                    {inv.id}
-                  </td>
-                  <td className="py-3 px-4 font-medium text-slate-800">
-                    {inv.billingPeriod}
-                  </td>
-                  <td className="py-3 px-4 font-mono font-black text-slate-900">
-                    £{inv.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                  </td>
-                  <td className="py-3 px-4">
-                    <Badge tone={inv.status === 'Paid' ? 'green' : (inv.status === 'Processing' ? 'blue' : 'amber')}>
-                      {inv.status}
-                    </Badge>
-                  </td>
-                  <td className="py-3 px-4 text-slate-600">
-                    {inv.paymentMethod}
-                  </td>
-                  <td className="py-3 px-4 text-slate-500 font-mono text-[11px]">
-                    {inv.dueDate}
-                  </td>
-                  <td className="py-3 px-4 text-right">
-                    <div className="flex items-center justify-end gap-1.5">
-                      <Button
-                        variant="outline"
-                        onClick={() => setSelectedInvoice(inv)}
-                        className="py-1 px-2.5 text-[11px] border-slate-200 hover:border-teal-400 font-semibold text-slate-700"
-                        title="View itemized service breakdown"
-                      >
-                        Itemized
-                      </Button>
-
-                      <Button
-                        variant="outline"
-                        onClick={() => handleDownloadInvoice(inv.id)}
-                        disabled={downloadingInv === inv.id}
-                        className="py-1 px-2.5 text-[11px] border-slate-200 hover:border-teal-400 text-teal-700 font-semibold flex items-center gap-1"
-                        title="Download official VAT Tax PDF"
-                      >
-                        {downloadingInv === inv.id ? (
-                          <RefreshCw className="h-3 w-3 animate-spin text-teal-600" />
-                        ) : (
-                          <Download className="h-3 w-3" />
-                        )}
-                        <span>PDF</span>
-                      </Button>
-                    </div>
+              {filteredInvoices.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-12 text-center text-xs text-slate-500 font-medium">
+                    No commercial invoices or statements found for this account.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                filteredInvoices.map((inv) => (
+                  <tr key={inv.id} className="hover:bg-slate-50/70 transition">
+                    <td className="py-3 px-4 font-mono font-bold text-slate-900">
+                      {inv.id}
+                    </td>
+                    <td className="py-3 px-4 font-medium text-slate-800">
+                      {inv.billingPeriod}
+                    </td>
+                    <td className="py-3 px-4 font-mono font-black text-slate-900">
+                      £{inv.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    </td>
+                    <td className="py-3 px-4">
+                      <Badge tone={inv.status === 'Paid' ? 'green' : (inv.status === 'Processing' ? 'blue' : 'amber')}>
+                        {inv.status}
+                      </Badge>
+                    </td>
+                    <td className="py-3 px-4 text-slate-600">
+                      {inv.paymentMethod}
+                    </td>
+                    <td className="py-3 px-4 text-slate-500 font-mono text-[11px]">
+                      {inv.dueDate}
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Button
+                          variant="outline"
+                          onClick={() => setSelectedInvoice(inv)}
+                          className="py-1 px-2.5 text-[11px] border-slate-200 hover:border-teal-400 font-semibold text-slate-700"
+                          title="View itemized service breakdown"
+                        >
+                          Itemized
+                        </Button>
+
+                        <Button
+                          variant="outline"
+                          onClick={() => handleDownloadInvoice(inv.id)}
+                          disabled={downloadingInv === inv.id}
+                          className="py-1 px-2.5 text-[11px] border-slate-200 hover:border-teal-400 text-teal-700 font-semibold flex items-center gap-1"
+                          title="Download official VAT Tax PDF"
+                        >
+                          {downloadingInv === inv.id ? (
+                            <RefreshCw className="h-3 w-3 animate-spin text-teal-600" />
+                          ) : (
+                            <Download className="h-3 w-3" />
+                          )}
+                          <span>PDF</span>
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

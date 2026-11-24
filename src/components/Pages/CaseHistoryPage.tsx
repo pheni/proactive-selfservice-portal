@@ -31,8 +31,8 @@ export const CaseHistoryPage: React.FC<CaseHistoryPageProps> = ({
         <Button
           variant="outline"
           onClick={() => onOpenVirtualAssistant({
-            caseNumber: 'CSM001102',
-            serviceName: 'Dedicated Internet Access',
+            caseNumber: closedCases[0]?.caseNumber || '',
+            serviceName: closedCases[0]?.service || 'Telecom Service',
             status: 'Closed'
           })}
           className="flex items-center gap-2 text-xs py-2 px-3 border-teal-500/40 text-teal-800 bg-teal-50/70 hover:bg-teal-100/80 self-start sm:self-auto"

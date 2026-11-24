@@ -25,7 +25,11 @@ export const AuthenticationModal: React.FC<AuthenticationModalProps> = ({ onComp
   const [resendTimer, setResendTimer] = useState(82); // 01:22
 
   // Reset Password States
-  const [resetEmail, setResetEmail] = useState(`admin@tataamericaintlcorpdemo3.service-now.com`);
+  const [resetEmail, setResetEmail] = useState(
+    typeof window !== 'undefined'
+      ? (sessionStorage.getItem('sn_email') || localStorage.getItem('sn_email') || '')
+      : ''
+  );
   const [newPassword, setNewPassword] = useState('P@$$word@12345');
   const [confirmPassword, setConfirmPassword] = useState('P@$$word@12345');
   const [resetError, setResetError] = useState<string | null>(null);

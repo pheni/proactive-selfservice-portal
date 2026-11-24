@@ -16,6 +16,36 @@ export interface ChatMessage {
   timestamp: string;
 }
 
+const renderFormattedMessage = (text: string, isUser: boolean) => {
+  if (!text) return null;
+  const lines = text.split('\n');
+
+  return lines.map((line, lineIdx) => {
+    const parts = line.split(/(\*\*[^*]+\*\*)/g);
+    const formattedParts = parts.map((part, partIdx) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        const inner = part.slice(2, -2);
+        return (
+          <strong
+            key={partIdx}
+            className={`font-semibold ${isUser ? 'text-white' : 'text-slate-900'}`}
+          >
+            {inner}
+          </strong>
+        );
+      }
+      return part;
+    });
+
+    return (
+      <React.Fragment key={lineIdx}>
+        {formattedParts}
+        {lineIdx < lines.length - 1 && <br />}
+      </React.Fragment>
+    );
+  });
+};
+
 export const ServiceNowNativeChatLeft: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -34,11 +64,11 @@ export const ServiceNowNativeChatLeft: React.FC = () => {
     scrollToBottom();
   }, [messages, loading]);
 
-  const sendPayloadToVA = async (userText?: string, optionValue?: string) => {
+  const sendPayloadToVA = async (userText?: string, optionValue?: string, isSilentGreeting?: boolean) => {
     const isInitial = !conversationId;
     const effectiveText = userText || (optionValue === 'true' ? 'Yes' : optionValue === 'false' ? 'No' : optionValue);
 
-    if (effectiveText) {
+    if (effectiveText && !isSilentGreeting) {
       setMessages((prev) => [
         ...prev,
         {
@@ -54,7 +84,7 @@ export const ServiceNowNativeChatLeft: React.FC = () => {
 
     try {
       const payload: Record<string, any> = isInitial
-        ? { message: userText || 'I want to create a repair case' }
+        ? { message: userText || 'Hello' }
         : {
             conversation_id: conversationId,
             client_session_id: clientSessionId,
@@ -170,6 +200,13 @@ export const ServiceNowNativeChatLeft: React.FC = () => {
     sendPayloadToVA(option.label, option.value);
   };
 
+  const handleRestartConversation = () => {
+    setConversationId(null);
+    setClientSessionId(null);
+    setMessages([]);
+    sendPayloadToVA('Hello', undefined, true);
+  };
+
   return (
     <>
       {/* Floating Launcher (Bottom-Left) */}
@@ -179,7 +216,7 @@ export const ServiceNowNativeChatLeft: React.FC = () => {
             onClick={() => {
               setIsOpen(true);
               if (messages.length === 0) {
-                sendPayloadToVA('I want to create a repair case');
+                sendPayloadToVA('Hello', undefined, true);
               }
             }}
             className="flex items-center gap-2 px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-full shadow-lg transition-all transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-400 cursor-pointer"
@@ -207,15 +244,27 @@ export const ServiceNowNativeChatLeft: React.FC = () => {
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-slate-400 hover:text-white p-1 rounded-lg transition-colors focus:outline-none cursor-pointer"
-              aria-label="Close"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={handleRestartConversation}
+                title="Restart Conversation"
+                className="text-slate-400 hover:text-white p-1 rounded-lg transition-colors focus:outline-none cursor-pointer"
+                aria-label="Restart Conversation"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              </button>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg transition-colors focus:outline-none cursor-pointer"
+                aria-label="Close"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           {/* Messages Body */}
@@ -232,7 +281,7 @@ export const ServiceNowNativeChatLeft: React.FC = () => {
                       : 'bg-white text-slate-800 border border-slate-200/80 rounded-bl-xs shadow-xs'
                   }`}
                 >
-                  {msg.text}
+                  {renderFormattedMessage(msg.text, msg.sender === 'user')}
                 </div>
 
                 {/* Interactive Controls (Boolean, Choice, Picker) */}

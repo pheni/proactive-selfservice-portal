@@ -1,7 +1,8 @@
 // src/components/ServiceNowEnhancedChat.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { serviceNowRestService } from '../services/servicenowApi';
-import { getServiceNowFullUrl } from '../config/servicenow.config';
+import { serviceNowAuthService } from '../services/servicenowAuth';
+import { SERVICENOW_CONFIG, getServiceNowFullUrl } from '../config/servicenow.config';
 
 export interface PortalCustomer {
   name: string;
@@ -46,7 +47,35 @@ interface ChatMessage {
 }
 
 const SN_AI_CHAT_URL =
-  'https://tataamericaintlcorpdemo3.service-now.com/api/sn_itsm_gen_ai/b2c_telecom_selfcare/ai-chat';
+  `${SERVICENOW_CONFIG.instanceUrl}/api/sn_itsm_gen_ai/b2c_telecom_selfcare/ai-chat`;
+
+const renderFormattedChatText = (text: string, isUser: boolean) => {
+  if (!text) return null;
+  const lines = text.split('\n');
+  return lines.map((line, lineIdx) => {
+    const parts = line.split(/(\*\*[^*]+\*\*)/g);
+    const formattedParts = parts.map((part, partIdx) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        const inner = part.slice(2, -2);
+        return (
+          <strong
+            key={partIdx}
+            style={{ fontWeight: 600, color: isUser ? '#ffffff' : '#0f172a' }}
+          >
+            {inner}
+          </strong>
+        );
+      }
+      return part;
+    });
+    return (
+      <React.Fragment key={lineIdx}>
+        {formattedParts}
+        {lineIdx < lines.length - 1 && <br />}
+      </React.Fragment>
+    );
+  });
+};
 
 export const ServiceNowEnhancedChat: React.FC<{
   customer: PortalCustomer;
@@ -65,7 +94,7 @@ export const ServiceNowEnhancedChat: React.FC<{
     id: 'greeting',
     sender: 'bot',
     timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    text: `Hello ${customer.name}! I am your Tata Telecom Assurance AI Assistant.\n\nAsk me anything naturally — for example: "Show my open cases", "View active circuits", "We have a packet loss outage on our Pune WAN link", or "Summarize case CS0001270".`,
+    text: `Hello ${customer.name}! I am your Tata Telecom Assurance AI Assistant.\n\nAsk me anything naturally — for example: "Show my open cases", "View active circuits", "We have a packet loss outage on our Pune WAN link", or "Summarize my active cases".`,
   };
 
   const [messages, setMessages] = useState<ChatMessage[]>([initialGreeting]);
@@ -77,7 +106,7 @@ export const ServiceNowEnhancedChat: React.FC<{
         id: 'greeting',
         sender: 'bot',
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        text: `Hello ${customer.name}! I am your Tata Telecom Assurance AI Assistant.\n\nAsk me anything naturally — for example: "Show my open cases", "View active circuits", "We have a packet loss outage on our Pune WAN link", or "Summarize case CS0001270".`,
+        text: `Hello ${customer.name}! I am your Tata Telecom Assurance AI Assistant.\n\nAsk me anything naturally — for example: "Show my open cases", "View active circuits", "We have a packet loss outage on our Pune WAN link", or "Summarize my active cases".`,
       },
     ]);
   }, [customer.userName, customer.name]);
@@ -137,6 +166,7 @@ export const ServiceNowEnhancedChat: React.FC<{
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
+          ...serviceNowAuthService.getAuthHeaders(),
         },
         body: JSON.stringify({
           message: messageToSend,
@@ -257,7 +287,7 @@ export const ServiceNowEnhancedChat: React.FC<{
 
       // If a comment was successfully added to ServiceNow, sync it to the portal UI
       if (payload.tool_executed === 'addCaseComment' || normalizedLiveData.comment_added) {
-        const commentTargetCase = normalizedLiveData.case?.number || currentCase || 'CS0001271';
+        const commentTargetCase = normalizedLiveData.case?.number || currentCase || (serviceNowRestService.getActiveCases()[0]?.caseNumber || '');
         const commentText =
           normalizedLiveData.case?.latest_customer_visible_update ||
           text
@@ -418,7 +448,7 @@ export const ServiceNowEnhancedChat: React.FC<{
               'Show my open cases',
               'View active circuits',
               'Internet is dropping in Pune',
-              'Summarize case CS0001270',
+              'Summarize active cases',
             ].map((p) => (
               <button
                 key={p}
@@ -461,29 +491,32 @@ export const ServiceNowEnhancedChat: React.FC<{
                   maxWidth: '88%',
                 }}
               >
-                <div
-                  style={{
-                    padding: '11px 14px',
-                    borderRadius:
-                      m.sender === 'user'
-                        ? '14px 14px 2px 14px'
-                        : '14px 14px 14px 2px',
-                    backgroundColor:
-                      m.sender === 'user' ? '#0055a5' : '#ffffff',
-                    color: m.sender === 'user' ? '#ffffff' : '#0f172a',
-                    fontSize: 13.5,
-                    lineHeight: 1.5,
-                    whiteSpace: 'pre-wrap',
-                    boxShadow:
-                      m.sender === 'bot'
-                        ? '0 2px 6px rgba(0, 0, 0, 0.05)'
-                        : 'none',
-                    border:
-                      m.sender === 'bot' ? '1px solid #e2e8f0' : 'none',
-                  }}
-                >
-                  {m.text}
-                </div>
+                {/* Text Bubble: Only render when not replaced by standalone card layout */}
+                {(!m.liveData?.cases || !Array.isArray(m.liveData.cases) || m.liveData.cases.length === 0) && (
+                  <div
+                    style={{
+                      padding: '11px 14px',
+                      borderRadius:
+                        m.sender === 'user'
+                          ? '14px 14px 2px 14px'
+                          : '14px 14px 14px 2px',
+                      backgroundColor:
+                        m.sender === 'user' ? '#0055a5' : '#ffffff',
+                      color: m.sender === 'user' ? '#ffffff' : '#0f172a',
+                      fontSize: 13.5,
+                      lineHeight: 1.5,
+                      whiteSpace: 'pre-wrap',
+                      boxShadow:
+                        m.sender === 'bot'
+                          ? '0 2px 6px rgba(0, 0, 0, 0.05)'
+                          : 'none',
+                      border:
+                        m.sender === 'bot' ? '1px solid #e2e8f0' : 'none',
+                    }}
+                  >
+                    {renderFormattedChatText(m.text, m.sender === 'user')}
+                  </div>
+                )}
 
                 {/* Render Live Cases List Card */}
                 {m.liveData?.cases && Array.isArray(m.liveData.cases) && m.liveData.cases.length > 0 && (

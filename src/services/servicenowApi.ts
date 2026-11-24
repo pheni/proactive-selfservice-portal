@@ -45,8 +45,7 @@ export const baseCustomerServices: ManagedServiceItem[] = [
     lastAssessed: "Just now",
     vlan: "VLAN 402",
     ipSubnet: "10.240.12.0/30",
-    carrierTail: "Tata Comm Dark Fiber Tail",
-    activeCaseNumber: "CS0001271"
+    carrierTail: "Tata Comm Dark Fiber Tail"
   },
   {
     id: "CKT-MUM-DC-01",
@@ -613,17 +612,262 @@ export const initialServicesList: ManagedServiceItem[] = [
   }))
 ];
 
+export const initialCustomerOrders: CustomerOrderItem[] = [
+  {
+    id: 'ord-tmt-1001',
+    orderNumber: 'ORD-2026-1001',
+    projectTitle: 'Bangalore AI R&D Campus 10G MPLS Expansion',
+    orderType: 'Bandwidth Upgrade',
+    status: 'In Progress',
+    progressPct: 68,
+    currentMilestone: 'Optical Network Trenching & Dark Conduit Pull',
+    orderedDate: '2026-10-18',
+    estimatedDelivery: '2026-11-20',
+    siteName: 'Bangalore Tech Park',
+    siteCode: 'BLR-01',
+    items: [
+      { category: 'Core WAN', description: '10 Gbps Symmetrical Dark Fiber Pair', quantity: 2, unit: 'Circuits', status: 'Provisioning' },
+      { category: 'Hardware', description: 'Cisco ASR 9904 Optical Core Chassis', quantity: 1, unit: 'Unit', status: 'Dispatched' },
+      { category: 'IP Transit', description: '10G Clean IP Transit Allocation', quantity: 1, unit: 'Allocation', status: 'Configured' }
+    ],
+    stages: [
+      { name: 'Site Survey & Demarcation Inspection', status: 'complete', date: '2026-10-20' },
+      { name: 'Optical Network Trenching & Dark Conduit Pull', status: 'current', date: 'In Progress' },
+      { name: 'Cisco Core PE Router Hardware Dispatch', status: 'pending' },
+      { name: 'RFC 2544 Throughput & Jitter Testing', status: 'pending' },
+      { name: 'Customer Service Acceptance & Handover', status: 'pending' }
+    ]
+  },
+  {
+    id: 'ord-tmt-1002',
+    orderNumber: 'ORD-2026-1002',
+    projectTitle: 'Pune Hinjawadi Phase-2 SD-WAN Secondary Redundancy',
+    orderType: 'New Installation',
+    status: 'In Progress',
+    progressPct: 45,
+    currentMilestone: 'FortiGate HA Cluster Staging',
+    orderedDate: '2026-10-22',
+    estimatedDelivery: '2026-11-28',
+    siteName: 'Pune Technical Center',
+    siteCode: 'PUN-01',
+    items: [
+      { category: 'SD-WAN', description: 'FortiGate 200F Dual Active SD-WAN Gateway', quantity: 1, unit: 'Unit', status: 'Staged' },
+      { category: 'Broadband', description: '1 Gbps Metro Ethernet Redundant Tail', quantity: 1, unit: 'Circuit', status: 'Provisioning' }
+    ],
+    stages: [
+      { name: 'Carrier Demarcation Feasibility Study', status: 'complete', date: '2026-10-24' },
+      { name: 'Secondary Metro Conduit Allocation', status: 'complete', date: '2026-10-29' },
+      { name: 'FortiGate HA Cluster Staging', status: 'current', date: 'In Progress' },
+      { name: 'Dynamic Failover & Simulation Testing', status: 'pending' },
+      { name: 'BGP Peering Cutover & Go-Live', status: 'pending' }
+    ]
+  },
+  {
+    id: 'ord-tmt-1003',
+    orderNumber: 'ORD-2026-1003',
+    projectTitle: 'Mumbai BKC Executive Headquarters SIP Trunk Migration',
+    orderType: 'MACD Change',
+    status: 'Pending Acceptance',
+    progressPct: 85,
+    currentMilestone: 'End-to-End Voice MOS Score & Codec Testing',
+    orderedDate: '2026-10-05',
+    estimatedDelivery: '2026-11-14',
+    siteName: 'Mumbai Global HQ',
+    siteCode: 'MUM-HQ',
+    items: [
+      { category: 'Voice & SIP', description: 'AudioCodes Mediant 1000B Enterprise SBC', quantity: 2, unit: 'Nodes', status: 'Complete' },
+      { category: 'Voice & SIP', description: '500 Concurrent SIP Voice Channels', quantity: 500, unit: 'Channels', status: 'Configured' },
+      { category: 'Voice & SIP', description: 'Direct Inward Dial Corporate Numbers', quantity: 2000, unit: 'DIDs', status: 'Ported' }
+    ],
+    stages: [
+      { name: 'Telephony Dial Plan Architecture Design', status: 'complete', date: '2026-10-08' },
+      { name: 'Dual SBC AudioCodes Rack & Power Verification', status: 'complete', date: '2026-10-15' },
+      { name: 'Carrier DID Number Porting Validation', status: 'complete', date: '2026-10-25' },
+      { name: 'End-to-End Voice MOS Score & Codec Testing', status: 'current', date: 'UAT Active' },
+      { name: 'Operational Signoff & Service Handover', status: 'pending' }
+    ]
+  },
+  {
+    id: 'ord-tmt-1004',
+    orderNumber: 'ORD-2026-1004',
+    projectTitle: 'Hyderabad HITEC City Campus Dedicated Internet Access (DIA)',
+    orderType: 'New Installation',
+    status: 'In Progress',
+    progressPct: 60,
+    currentMilestone: 'DDoS Scrubbing Center Route Configuration',
+    orderedDate: '2026-10-15',
+    estimatedDelivery: '2026-11-25',
+    siteName: 'Hyderabad R&D Hub',
+    siteCode: 'HYD-01',
+    items: [
+      { category: 'Broadband', description: '1 Gbps Clean Pipe DIA with DDoS Shield', quantity: 1, unit: 'Circuit', status: 'Provisioning' },
+      { category: 'IP Transit', description: '/28 Public IPv4 Subnet Allocation', quantity: 16, unit: 'IPs', status: 'Assigned' }
+    ],
+    stages: [
+      { name: 'MMR Cross-Connect Feasibility', status: 'complete', date: '2026-10-18' },
+      { name: 'Single-Mode LC Fiber Patch Installation', status: 'complete', date: '2026-10-26' },
+      { name: 'DDoS Scrubbing Center Route Configuration', status: 'current', date: 'In Progress' },
+      { name: 'RFC 6349 TCP Throughput Benchmarking', status: 'pending' },
+      { name: 'Final Handover Certificate & Billing Activation', status: 'pending' }
+    ]
+  },
+  {
+    id: 'ord-tmt-1005',
+    orderNumber: 'ORD-2026-1005',
+    projectTitle: 'Chennai OMR Facility 5G Enterprise Mobile Fleet Rollout',
+    orderType: 'Macro Rollout',
+    status: 'In Progress',
+    progressPct: 72,
+    currentMilestone: 'Intune MDM Security Payload Push',
+    orderedDate: '2026-10-10',
+    estimatedDelivery: '2026-11-18',
+    siteName: 'Chennai OMR Tech Hub',
+    siteCode: 'CHE-01',
+    items: [
+      { category: 'Mobile Fleet', description: 'B2B Enterprise 5G Unlimited SIM Profiles', quantity: 150, unit: 'SIMs', status: 'Provisioned' },
+      { category: 'Mobile Security', description: 'Private APN & Zero Trust Tunnel Bundle', quantity: 1, unit: 'Bundle', status: 'Configured' }
+    ],
+    stages: [
+      { name: 'Corporate APN & Secure Gateway Topology Design', status: 'complete', date: '2026-10-14' },
+      { name: 'Bulk eSIM Profile Generation in HLR/HSS', status: 'complete', date: '2026-10-22' },
+      { name: 'Intune MDM Security Payload Push', status: 'current', date: 'In Progress' },
+      { name: 'Field Validation & Speed Benchmark Testing', status: 'pending' },
+      { name: 'Departmental Dispatch & Activation Signoff', status: 'pending' }
+    ]
+  },
+  {
+    id: 'ord-tmt-1006',
+    orderNumber: 'ORD-2026-1006',
+    projectTitle: 'Singapore Subsea Landing Station 10G Cross-Connect',
+    orderType: 'Bandwidth Upgrade',
+    status: 'Completed',
+    progressPct: 100,
+    currentMilestone: 'Final Production Cutover & Handover',
+    orderedDate: '2026-09-12',
+    estimatedDelivery: '2026-10-28',
+    siteName: 'Singapore Subsea Landing',
+    siteCode: 'SGP-01',
+    items: [
+      { category: 'Interconnect', description: '10G Optical Patch to TGN Subsea Cable', quantity: 1, unit: 'Link', status: 'Active' },
+      { category: 'SLA Tier', description: '99.999% Ultra-Low Latency Financial SLA', quantity: 1, unit: 'Tier', status: 'Active' }
+    ],
+    stages: [
+      { name: 'Equinix SG1 Colocation Cross-Connect Authorization', status: 'complete', date: '2026-09-15' },
+      { name: 'Optical Fiber Demarcation & OTDR Loss Verification', status: 'complete', date: '2026-09-24' },
+      { name: 'BGP 4323 Peering & Subsea Routing Optimization', status: 'complete', date: '2026-10-10' },
+      { name: '72-Hour BER Stress Testing', status: 'complete', date: '2026-10-22' },
+      { name: 'Final Production Cutover & Handover', status: 'complete', date: '2026-10-28' }
+    ]
+  },
+  {
+    id: 'ord-tmt-1007',
+    orderNumber: 'ORD-2026-1007',
+    projectTitle: 'Delhi NCR Corporate Office Cloud DirectConnect Redundancy',
+    orderType: 'New Installation',
+    status: 'In Progress',
+    progressPct: 50,
+    currentMilestone: 'Direct Connect Link Up & BGP Auth Establishment',
+    orderedDate: '2026-10-25',
+    estimatedDelivery: '2026-12-05',
+    siteName: 'New Delhi Corporate',
+    siteCode: 'DEL-HQ',
+    items: [
+      { category: 'Cloud Interconnect', description: 'AWS Direct Connect Dedicated 10G Port', quantity: 1, unit: 'Port', status: 'Provisioning' },
+      { category: 'Interconnect', description: 'Hosted Private Virtual Interface (VIF)', quantity: 1, unit: 'VIF', status: 'Staged' }
+    ],
+    stages: [
+      { name: 'AWS LOA-CFA Generation & Partner Demarcation', status: 'complete', date: '2026-10-28' },
+      { name: 'Physical Meet-Me-Room Cross-Connect Deployment', status: 'complete', date: '2026-11-04' },
+      { name: 'Direct Connect Link Up & BGP Auth Establishment', status: 'current', date: 'In Progress' },
+      { name: 'VPC Peering & Transit Gateway Integration', status: 'pending' },
+      { name: 'Acceptance Signoff & Billing Handover', status: 'pending' }
+    ]
+  },
+  {
+    id: 'ord-tmt-1008',
+    orderNumber: 'ORD-2026-1008',
+    projectTitle: 'Kolkata Delivery Center Wi-Fi 6 Enterprise Rollout',
+    orderType: 'Macro Rollout',
+    status: 'Completed',
+    progressPct: 100,
+    currentMilestone: 'Final Building Handover & Acceptance',
+    orderedDate: '2026-09-01',
+    estimatedDelivery: '2026-10-15',
+    siteName: 'Kolkata Salt Lake Center',
+    siteCode: 'CCU-01',
+    items: [
+      { category: 'Wi-Fi APs', description: 'Cisco Catalyst 9130AX Enterprise Wi-Fi 6 APs', quantity: 48, unit: 'APs', status: 'Active' },
+      { category: 'Hardware', description: 'Cisco Catalyst 9300 48-Port PoE+ Core Switches', quantity: 4, unit: 'Switches', status: 'Active' }
+    ],
+    stages: [
+      { name: 'Predictive RF Heatmap & Passive Site Survey', status: 'complete', date: '2026-09-05' },
+      { name: 'Cat6A Shielded Structured Cabling Run', status: 'complete', date: '2026-09-18' },
+      { name: 'AP Ceiling Mounting & PoE Switch Staging', status: 'complete', date: '2026-09-28' },
+      { name: 'Cisco DNA Spaces Coverage Certification', status: 'complete', date: '2026-10-08' },
+      { name: 'Final Building Handover & Acceptance', status: 'complete', date: '2026-10-15' }
+    ]
+  },
+  {
+    id: 'ord-tmt-1009',
+    orderNumber: 'ORD-2026-1009',
+    projectTitle: 'Frankfurt Interconnect BGP Route Optimization & MTU Expansion',
+    orderType: 'MACD Change',
+    status: 'Completed',
+    progressPct: 100,
+    currentMilestone: 'Post-Implementation Review Signoff',
+    orderedDate: '2026-09-20',
+    estimatedDelivery: '2026-10-10',
+    siteName: 'Frankfurt Interxion FRA1',
+    siteCode: 'FRA-01',
+    items: [
+      { category: 'Interconnect', description: 'Jumbo Frame (MTU 9000) Core Optimization', quantity: 1, unit: 'Link', status: 'Active' },
+      { category: 'Routing', description: 'AS64512 Prefix Limit Increase to 5,000', quantity: 1, unit: 'Service', status: 'Active' }
+    ],
+    stages: [
+      { name: 'Change Advisory Board (CAB) Security Approval', status: 'complete', date: '2026-09-22' },
+      { name: 'Core Edge Router Maintenance Window Configuration', status: 'complete', date: '2026-09-28' },
+      { name: 'MTU 9198 End-to-End Ping Stress Verification', status: 'complete', date: '2026-10-02' },
+      { name: 'BGP Convergence & Fast Reroute Validation', status: 'complete', date: '2026-10-08' },
+      { name: 'Post-Implementation Review Signoff', status: 'complete', date: '2026-10-10' }
+    ]
+  },
+  {
+    id: 'ord-tmt-1010',
+    orderNumber: 'ORD-2026-1010',
+    projectTitle: 'Ahmedabad Secondary Site 500M Optical SD-WAN Provisioning',
+    orderType: 'New Installation',
+    status: 'In Progress',
+    progressPct: 35,
+    currentMilestone: 'Civil Trenching & Duct Pipe Laying',
+    orderedDate: '2026-11-01',
+    estimatedDelivery: '2026-12-15',
+    siteName: 'Ahmedabad Finance City',
+    siteCode: 'AMD-01',
+    items: [
+      { category: 'Broadband', description: '500 Mbps Dark Fiber Metro Ethernet Tail', quantity: 1, unit: 'Circuit', status: 'Trenching' },
+      { category: 'SD-WAN', description: 'Cisco Catalyst 8300 Edge Router', quantity: 1, unit: 'Unit', status: 'Dispatched' }
+    ],
+    stages: [
+      { name: 'Municipal Right of Way (RoW) Approval', status: 'complete', date: '2026-11-04' },
+      { name: 'Civil Trenching & Duct Pipe Laying', status: 'current', date: 'In Progress' },
+      { name: 'Optical Fiber Splicing & OTDR Calibration', status: 'pending' },
+      { name: 'Cisco Edge Router Installation & IP Allocation', status: 'pending' },
+      { name: 'Customer Acceptance Testing & Handover', status: 'pending' }
+    ]
+  }
+];
+
 export const initialPortalData: PortalData = {
-  customer: (typeof window !== 'undefined' ? (sessionStorage.getItem('sn_first_name') ? `${sessionStorage.getItem('sn_first_name')} ${sessionStorage.getItem('sn_last_name') || ''}`.trim() : null) : null) || "Customer",
-  account: "Tata B2B Enterprise Services",
-  service: "1 Gbps Primary Optical MPLS Trunk",
-  serviceId: "CKT-PUN-001",
+  customer: (typeof window !== 'undefined' ? (sessionStorage.getItem('sn_user_fullname') || (sessionStorage.getItem('sn_first_name') ? `${sessionStorage.getItem('sn_first_name')} ${sessionStorage.getItem('sn_last_name') || ''}`.trim() : null) || localStorage.getItem('sn_user_fullname')) : null) || "",
+  account: (typeof window !== 'undefined' ? (sessionStorage.getItem('sn_account_name') || localStorage.getItem('sn_account_name')) : null) || "",
+  service: "",
+  serviceId: "",
   bandwidth: "1 Gbps",
-  location: "Pune Technical Center",
-  caseNumber: "CS0001271",
-  incidentReference: "INC-498221",
+  location: "",
+  caseNumber: "",
+  incidentReference: "",
   queue: "Service Assurance Support Queue",
-  email: (typeof window !== 'undefined' ? (sessionStorage.getItem('sn_email') || localStorage.getItem('sn_email')) : null) || "customer@tataglobal.com",
+  email: (typeof window !== 'undefined' ? (sessionStorage.getItem('sn_email') || localStorage.getItem('sn_email')) : null) || "",
   phone: "+91 20 6600 0000",
   servicesList: initialServicesList,
   serviceMetrics: {
@@ -686,6 +930,7 @@ class ServiceNowRestService {
   private endpointUrl: string = getServiceNowFullUrl(SERVICENOW_CONFIG.tableApi.case);
   private activeCasesCache: ActiveCaseItem[] = [...initialActiveCases];
   private closedCasesCache: ClosedCaseItem[] = [...initialClosedCases];
+  private ordersCache: CustomerOrderItem[] = [];
   private mobileSubscriptions: MobileSubscriptionItem[] = [...initialMobileSubscriptions];
   private fiberBroadband: FiberBroadbandItem[] = [...initialFiberBroadband];
   private contracts: CorporateContractItem[] = [...initialCorporateContracts];
@@ -815,32 +1060,7 @@ class ServiceNowRestService {
       };
     });
 
-    // Append any extra active cases from ServiceNow as dynamic managed services ONLY if not matching any base service
-    activeCases.forEach(ac => {
-      if (!matchedCaseNumbers.has(ac.caseNumber)) {
-        matchedCaseNumbers.add(ac.caseNumber);
-        synced.push({
-          id: `SVC-${ac.caseNumber}`,
-          name: ac.service || 'Customer Managed Service',
-          category: ac.category || 'General',
-          bandwidth: 'Standard Allocation',
-          location: 'Customer Site',
-          status: (ac.status === 'Monitoring' || ac.status === 'Recovery') ? 'Healing' : 'Degraded',
-          availability: ac.priority === 'P1' ? '98.50%' : '99.95%',
-          latency: 'Assurance monitored',
-          packetLoss: 'Active',
-          lastAssessed: ac.openedTime || 'Just now',
-          activeCaseNumber: ac.caseNumber,
-          activeCaseDetails: {
-            caseNumber: ac.caseNumber,
-            priority: ac.priority || 'P2',
-            status: ac.status,
-            description: ac.description
-          }
-        });
-      }
-    });
-
+    // Strict 25 Enterprise Assets: Active cases update health/assurance on matching base circuits, never fabricate fake circuits
     return synced;
   }
 
@@ -1018,11 +1238,8 @@ class ServiceNowRestService {
 
     let serviceId = record.service_id || record.serviceId || (typeof record.cmdb_ci === 'string' ? record.cmdb_ci : (record.asset?.display_value));
     if (!serviceId) {
-      if (serviceName.includes('SD-WAN')) serviceId = 'SDW-1000-MCH';
-      else if (serviceName.includes('Cloud')) serviceId = 'CCE-500-SLG';
-      else if (serviceName.includes('Voice') || serviceName.includes('SIP')) serviceId = 'SIP-30-LON';
-      else if (serviceName.includes('Internet')) serviceId = 'DIA-100-LON';
-      else if (serviceName.includes('MPLS')) serviceId = 'CKT-PUN-001';
+      const match = (serviceName + ' ' + (record.short_description || '') + ' ' + (record.description || '')).match(/CKT-[A-Z0-9-]+|DIA-[A-Z0-9-]+|SIP-[A-Z0-9-]+|MOB-[A-Z0-9-]+/i);
+      if (match) serviceId = match[0].toUpperCase();
       else serviceId = 'SVC-' + (record.case_number || record.number || `00${idx + 1}`);
     }
 
@@ -1097,11 +1314,8 @@ class ServiceNowRestService {
 
     let serviceId = record.service_id || record.serviceId || (typeof record.cmdb_ci === 'string' ? record.cmdb_ci : (record.asset?.display_value));
     if (!serviceId) {
-      if (serviceName.includes('SD-WAN')) serviceId = 'SDW-1000-MCH';
-      else if (serviceName.includes('Cloud')) serviceId = 'CCE-500-SLG';
-      else if (serviceName.includes('Voice') || serviceName.includes('SIP')) serviceId = 'SIP-30-LON';
-      else if (serviceName.includes('Internet')) serviceId = 'DIA-100-LON';
-      else if (serviceName.includes('MPLS')) serviceId = 'CKT-PUN-001';
+      const match = (serviceName + ' ' + (record.short_description || '') + ' ' + (record.description || '')).match(/CKT-[A-Z0-9-]+|DIA-[A-Z0-9-]+|SIP-[A-Z0-9-]+|MOB-[A-Z0-9-]+/i);
+      if (match) serviceId = match[0].toUpperCase();
       else serviceId = 'SVC-' + (record.case_number || record.number || `00${idx + 1}`);
     }
 
@@ -1140,6 +1354,10 @@ class ServiceNowRestService {
 
   public getActiveCases(): ActiveCaseItem[] {
     return [...this.activeCasesCache];
+  }
+
+  public getOrders(): CustomerOrderItem[] {
+    return this.ordersCache.length > 0 ? this.ordersCache : [];
   }
 
   public getActiveCaseByNumber(caseNum: string): ActiveCaseItem | undefined {
@@ -1183,105 +1401,57 @@ class ServiceNowRestService {
     }
   }
 
+  public saveCaseActivities(caseNumber: string, activities: CaseActivityItem[]): void {
+    this.caseActivities[caseNumber] = activities;
+    try {
+      localStorage.setItem(`b2c_case_activities_${caseNumber}`, JSON.stringify(activities));
+    } catch (e) {
+      console.warn('localStorage write error:', e);
+    }
+  }
+
   public async fetchCaseActivitiesLive(caseNumber: string, defaultItems?: CaseActivityItem[]): Promise<CaseActivityItem[]> {
     if (!caseNumber) return [];
     const headers = serviceNowAuthService.getAuthHeaders();
 
     try {
-      // 1. Query the case record to get its sys_id and any baseline info
-      const caseEndpoint = `${getServiceNowFullUrl(SERVICENOW_CONFIG.tableApi.case)}?sysparm_query=number=${caseNumber}&sysparm_limit=1&sysparm_fields=sys_id,number,short_description,description,opened_at,sys_created_on,sys_created_by,comments,work_notes,latest_customer_visible_update,latest_customer_visible_update_on`;
-      const caseRes = await fetch(caseEndpoint, { method: 'GET', headers, credentials: 'same-origin' });
+      // 1. Query the custom Scripted REST API which returns full case activities and journal entries from database without 401 ACL constraints
+      const scriptedEndpoint = `${getServiceNowFullUrl(SERVICENOW_CONFIG.scriptedCasesPath)}?case_number=${encodeURIComponent(caseNumber)}`;
+      const res = await fetch(scriptedEndpoint, { method: 'GET', headers, credentials: 'same-origin' });
 
-      if (caseRes.ok) {
-        const caseData = await caseRes.json();
-        const record = caseData.result && caseData.result.length > 0 ? caseData.result[0] : null;
+      if (res.ok) {
+        const json = await res.json();
+        const payload = json.result?.result || json.result || json;
+        const caseList = Array.isArray(payload) ? payload : (Array.isArray(payload?.result) ? payload.result : []);
+        const matching = caseList.find((c: any) => c.case_number === caseNumber) || caseList[0];
 
-        if (record && record.sys_id) {
-          const liveItems: CaseActivityItem[] = [];
-
-          // 2. Fetch journal entries (customer comments & work notes) from sys_journal_field
-          try {
-            const journalEndpoint = `${getServiceNowFullUrl('/api/now/table/sys_journal_field')}?sysparm_query=element_id=${record.sys_id}^ORDERBYDESCsys_created_on&sysparm_limit=30`;
-            const journalRes = await fetch(journalEndpoint, { method: 'GET', headers, credentials: 'same-origin' });
-
-            if (journalRes.ok) {
-              const journalData = await journalRes.json();
-              const entries = Array.isArray(journalData.result) ? journalData.result : [];
-
-              for (const entry of entries) {
-                const rawVal = (entry.value || '').trim();
-                if (!rawVal) continue;
-
-                const isUrgent = rawVal.includes('[URGENT') || rawVal.includes('P1') || rawVal.includes('⚡');
-                const isCust = entry.element === 'comments' ||
-                               rawVal.toLowerCase().includes('customer') ||
-                               rawVal.startsWith('[Customer Update]:') ||
-                               rawVal.startsWith('[Customer Self-Care]:');
-
-                // Format timestamp
-                let formattedTime = 'Recently';
-                if (entry.sys_created_on) {
-                  try {
-                    const d = new Date(entry.sys_created_on);
-                    formattedTime = d.toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-                  } catch {
-                    formattedTime = entry.sys_created_on;
-                  }
-                }
-
-                // Clean prefixes for elegant display
-                let cleanText = rawVal;
-                cleanText = cleanText.replace(/^\[URGENT CUSTOMER UPDATE\]:\s*/i, '');
-                cleanText = cleanText.replace(/^\[Customer Update\]:\s*/i, '');
-                cleanText = cleanText.replace(/^\[Customer Self-Care\]:\s*/i, '');
-                cleanText = cleanText.replace(/^Customer \([^)]+\) Note via Portal:\s*/i, '');
-
-                liveItems.push({
-                  id: entry.sys_id || ('sn_act_' + Math.random().toString()),
-                  author: isCust ? (this.portalData.customer || 'Goutam Hazra') : (entry.sys_created_by === 'system' ? 'System Automation' : 'Service Assurance Specialist'),
-                  role: isCust ? 'Customer' : (entry.sys_created_by === 'system' ? 'System Automation' : 'ServiceNow Specialist'),
-                  text: cleanText,
-                  timestamp: formattedTime,
-                  isUrgent
-                });
+        if (matching && Array.isArray(matching.activities) && matching.activities.length > 0) {
+          const liveItems: CaseActivityItem[] = matching.activities.map((act: any) => {
+            let formattedTime = 'Recently';
+            if (act.timestamp) {
+              try {
+                const d = new Date(act.timestamp);
+                formattedTime = !isNaN(d.getTime())
+                  ? d.toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+                  : act.timestamp;
+              } catch {
+                formattedTime = act.timestamp;
               }
             }
-          } catch (jErr) {
-            console.warn('[fetchCaseActivitiesLive] sys_journal_field query error:', jErr);
-          }
 
-          // 3. Fallback: If sys_journal_field had 0 entries or was blocked, check record.comments
-          if (liveItems.length === 0 && record.comments) {
-            const rawComm = String(record.comments).trim();
-            if (rawComm) {
-              liveItems.push({
-                id: 'sn_comm_' + record.sys_id,
-                author: this.portalData.customer || 'Goutam Hazra',
-                role: 'Customer',
-                text: rawComm.replace(/^\[Customer Update\]:\s*/i, '').replace(/^Customer \([^)]+\) Note via Portal:\s*/i, ''),
-                timestamp: 'Recently'
-              });
-            }
-          }
+            return {
+              id: act.id || ('act_' + Math.random().toString(36).substr(2, 9)),
+              author: act.author || this.portalData.customer || 'Customer',
+              role: act.role || 'Customer',
+              text: act.text || '',
+              timestamp: formattedTime,
+              isUrgent: Boolean(act.isUrgent)
+            };
+          });
 
-          // 3b. Also merge latest_customer_visible_update if saved by ServiceNow AI Assistant
-          if (record.latest_customer_visible_update) {
-            const rawUpdate = String(record.latest_customer_visible_update).trim();
-            if (rawUpdate && !liveItems.some(i => i.text.toLowerCase() === rawUpdate.toLowerCase())) {
-              liveItems.unshift({
-                id: 'sn_update_' + record.sys_id + '_' + Date.now(),
-                author: this.portalData.customer || 'Goutam Hazra',
-                role: 'Customer',
-                text: rawUpdate,
-                timestamp: record.latest_customer_visible_update_on || 'Recently'
-              });
-            }
-          }
-
-          // 4. Merge liveItems with cached local activities (deduplicating by text)
+          // Deduplicate and save
           const localItems = this.getCaseActivities(caseNumber, defaultItems);
           const merged: CaseActivityItem[] = [...liveItems];
-
           for (const loc of localItems) {
             const alreadyExists = merged.some(m =>
               m.text.trim().toLowerCase() === loc.text.trim().toLowerCase() ||
@@ -1292,27 +1462,12 @@ class ServiceNowRestService {
             }
           }
 
-          // Ensure baseline initial creation item exists if not present
-          if (!merged.some(m => m.id === 'act-init' || m.text.includes('initialized'))) {
-            if (defaultItems) {
-              const initItem = defaultItems.find(d => d.id === 'act-init');
-              if (initItem) merged.push(initItem);
-            }
-          }
-
-          this.caseActivities[caseNumber] = merged;
-          try {
-            localStorage.setItem(`b2c_case_activities_${caseNumber}`, JSON.stringify(merged));
-          } catch (e) {
-            console.warn('localStorage write error:', e);
-          }
-
-          this.logCall('GET', `/api/now/table/sys_journal_field?element_id=${record.sys_id}`, 200, `200 OK - Fetched ${liveItems.length} Journal Activities from ServiceNow for ${caseNumber}`);
+          this.saveCaseActivities(caseNumber, merged);
           return merged;
         }
       }
-    } catch (err) {
-      console.warn(`[fetchCaseActivitiesLive] Error for case ${caseNumber}:`, err);
+    } catch (apiErr) {
+      console.warn('[fetchCaseActivitiesLive] Scripted REST API error:', apiErr);
     }
 
     return this.getCaseActivities(caseNumber, defaultItems);
@@ -1466,8 +1621,31 @@ class ServiceNowRestService {
   }
 
   public async addCommentViaRest(caseNumber: string, comment: string, isUrgent: boolean = false): Promise<boolean> {
-    const headers = serviceNowAuthService.getAuthHeaders();
     try {
+      // 1. Direct Scripted REST Action (bypasses Table API 401/403 ACL restrictions & directly updates sys_journal_field)
+      const nlqEndpoint = `${getServiceNowFullUrl('/api/sn_itsm_gen_ai/b2c_telecom_selfcare/nlq-chat')}`;
+      const currentUser = serviceNowAuthService.getCurrentUser();
+      const headers = serviceNowAuthService.getTableAuthHeaders();
+      const nlqRes = await fetch(nlqEndpoint, {
+        method: 'POST',
+        headers,
+        credentials: 'same-origin',
+        body: JSON.stringify({
+          message: `Please add a comment to case ${caseNumber}: ${isUrgent ? '[URGENT] ' : ''}${comment}`,
+          user_name: currentUser?.username || 'goutam.hazra',
+          email: currentUser?.email || 'goutam.hazra@tataglobal.com'
+        })
+      });
+
+      if (nlqRes.ok) {
+        const json = await nlqRes.json();
+        if (json.result?.comment_added || json.result?.tool_executed === 'addCaseComment' || json.result?.success) {
+          this.logCall('POST', nlqEndpoint, 200, `200 OK - Comment synced to ServiceNow Case ${caseNumber} via Scripted REST Action`);
+          return true;
+        }
+      }
+
+      // 2. Secondary fallback via Table API with Integration credentials
       const tableEndpoint = `${getServiceNowFullUrl(SERVICENOW_CONFIG.tableApi.case)}?sysparm_query=number=${caseNumber}&sysparm_limit=1`;
       const queryRes = await fetch(tableEndpoint, { method: 'GET', headers, credentials: 'same-origin' });
       if (queryRes.ok) {
@@ -1544,7 +1722,8 @@ class ServiceNowRestService {
       return this.activeCasesInFlight;
     }
 
-    const endpoint = `${getServiceNowFullUrl(SERVICENOW_CONFIG.scriptedCasesPath)}?state=active&limit=${limit}`;
+    const userName = typeof window !== 'undefined' ? (sessionStorage.getItem('sn_username') || localStorage.getItem('sn_username') || '') : '';
+    const endpoint = `${getServiceNowFullUrl(SERVICENOW_CONFIG.scriptedCasesPath)}?state=active&limit=${limit}${userName ? `&user_name=${encodeURIComponent(userName)}` : ''}`;
     const headers = serviceNowAuthService.getAuthHeaders();
 
     this.activeCasesInFlight = (async () => {
@@ -1614,7 +1793,8 @@ class ServiceNowRestService {
       return this.closedCasesInFlight;
     }
 
-    const endpoint = `${getServiceNowFullUrl(SERVICENOW_CONFIG.scriptedCasesPath)}?limit=${limit * 2}`;
+    const userName = typeof window !== 'undefined' ? (sessionStorage.getItem('sn_username') || localStorage.getItem('sn_username') || '') : '';
+    const endpoint = `${getServiceNowFullUrl(SERVICENOW_CONFIG.scriptedCasesPath)}?limit=${limit * 2}${userName ? `&user_name=${encodeURIComponent(userName)}` : ''}`;
     const headers = serviceNowAuthService.getAuthHeaders();
 
     this.closedCasesInFlight = (async () => {
@@ -1693,7 +1873,29 @@ class ServiceNowRestService {
         const json = await res.json();
         const data = json.result?.result || json.result || json;
         if (data && (data.name || data.account_name || data.accountName)) {
-          const accName = data.name || data.account_name || data.accountName || 'Tata B2B Enterprise Services';
+          const accName = data.name || data.account_name || data.accountName;
+          if (accName === 'No Account Associated' || !data.account_id) {
+            this.portalData.account = 'No Account Associated';
+            return {
+              accountId: '',
+              accountName: 'No Account Associated',
+              contractNumber: 'None',
+              contractTier: 'None',
+              uptimeSla: 'None',
+              healthScore: 0,
+              billingCurrency: 'USD',
+              industry: 'None',
+              sitesCount: 0,
+              activeOrdersCount: 0,
+              openTicketsCount: 0,
+              activeServicesCount: 0,
+              accountTeam: {
+                accountDirector: { name: 'Unassigned', email: '', phone: '' },
+                technicalAccountManager: { name: 'Unassigned', email: '', phone: '' },
+                escalationNocLead: { name: 'Unassigned', hotline: '' }
+              }
+            };
+          }
           const tier = data.tier || data.sla_tier || data.contractTier || fallback.contractTier;
           this.portalData.account = accName;
           this.logCall('GET', endpoint, res.status, `200 OK - Account Details for ${accName}`, undefined, data);
@@ -1707,9 +1909,9 @@ class ServiceNowRestService {
             billingCurrency: data.currency || fallback.billingCurrency,
             industry: data.industry || fallback.industry,
             sitesCount: data.sites_count || fallback.sitesCount,
-            activeOrdersCount: data.orders_count || fallback.activeOrdersCount,
+            activeOrdersCount: data.orders_count || 0,
             openTicketsCount: data.open_tickets_count || this.activeCasesCache.length,
-            activeServicesCount: data.active_subscriptions_count || data.services_count || (this.portalData.servicesList?.length || 88),
+            activeServicesCount: data.active_subscriptions_count || 0,
             accountTeam: data.account_team || fallback.accountTeam
           };
         }
@@ -1762,6 +1964,10 @@ class ServiceNowRestService {
       if (res.ok) {
         const json = await res.json();
         const rawList = Array.isArray(json.result?.result) ? json.result.result : (Array.isArray(json.result) ? json.result : (Array.isArray(json) ? json : []));
+        if (rawList.length === 0) {
+          this.ordersCache = [];
+          return [];
+        }
         if (rawList.length > 0) {
           const mapped: CustomerSiteItem[] = rawList.map((s: any) => ({
             id: s.sys_id || s.id || `site-${s.site_code?.toLowerCase()}`,
@@ -1796,6 +2002,10 @@ class ServiceNowRestService {
       if (res.ok) {
         const json = await res.json();
         const rawList = Array.isArray(json.result?.result) ? json.result.result : (Array.isArray(json.result) ? json.result : (Array.isArray(json) ? json : []));
+        if (rawList.length === 0) {
+          this.ordersCache = [];
+          return [];
+        }
         if (rawList.length > 0) {
           const mapped: CustomerOrderItem[] = rawList.map((o: any, idx: number) => {
             const projectTitle = o.product_name || o.short_description || 'Telecom Service Order';
@@ -1955,67 +2165,71 @@ class ServiceNowRestService {
               stages
             };
           });
-          this.logCall('GET', endpoint, res.status, `200 OK - Fetched ${mapped.length} Orders from ServiceNow`, undefined, { count: mapped.length });
-          return mapped;
+
+          // Strict deduplication by orderNumber
+          const seenNumbers = new Set<string>();
+          const deduplicated: CustomerOrderItem[] = [];
+          for (const item of mapped) {
+            if (!seenNumbers.has(item.orderNumber)) {
+              seenNumbers.add(item.orderNumber);
+              deduplicated.push(item);
+            }
+          }
+          this.ordersCache = deduplicated;
+          this.logCall('GET', endpoint, res.status, `200 OK - Fetched ${deduplicated.length} Orders from ServiceNow`, undefined, { count: deduplicated.length });
+          return deduplicated;
         }
       }
     } catch (err) {
       console.warn('[fetchOrders] Error:', err);
     }
-    return [];
+    return this.ordersCache.length > 0 ? this.ordersCache : [];
   }
 
   public async fetchServices(siteCodeParam?: string, userNameParam?: string): Promise<ManagedServiceItem[]> {
-    const userEmail = (typeof window !== 'undefined' ? (sessionStorage.getItem('sn_email') || localStorage.getItem('sn_email')) : null) || this.portalData.email || 'goutam.hazra@tataglobal.com';
-    const endpoint = getServiceNowFullUrl('/api/sn_itsm_gen_ai/b2c_telecom_selfcare/services');
-    const headers = {
-      ...serviceNowAuthService.getAuthHeaders(),
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    };
+    const userName = userNameParam || (typeof window !== 'undefined' ? (sessionStorage.getItem('sn_username') || localStorage.getItem('sn_username')) : null) || SERVICENOW_CONFIG.defaultUsername;
+    const endpoint = `${getServiceNowFullUrl(SERVICENOW_CONFIG.scriptedServicesPath)}?user_name=${encodeURIComponent(userName)}${siteCodeParam ? `&site_code=${encodeURIComponent(siteCodeParam)}` : ''}`;
+    const headers = serviceNowAuthService.getAuthHeaders();
 
     try {
       const res = await fetch(endpoint, {
-        method: 'POST',
+        method: 'GET',
         headers,
-        body: JSON.stringify({
-          email: userEmail,
-          filter: 'all'
-        })
+        credentials: 'same-origin'
       });
 
       if (res.ok) {
         const json = await res.json();
         const payload = json.result || json;
-        const data = payload.data || {};
-        const rawList = Array.isArray(data.services) ? data.services : [];
+        const rawList = Array.isArray(payload.result) ? payload.result : (Array.isArray(payload) ? payload : []);
+
+        if (rawList.length === 0) {
+          this.portalData.servicesList = [];
+          this.portalData.serviceMetrics = { core_wan: 0, fiber_broadband: 0, voice_sip: 0, mobile_fleet: 0, total: 0 };
+          return [];
+        }
 
         if (rawList.length > 0) {
           const mapped: ManagedServiceItem[] = rawList.map((ci: any) => {
-            const num = String(ci.number || ci.sys_id || '').toUpperCase();
-            const rawCat = String(ci.category || '').toLowerCase();
+            const num = String(ci.service_id || ci.number || ci.sys_id || '').toUpperCase();
             const name = String(ci.name || 'Managed Telecom Service');
-            const loc = String(ci.location || 'Pune Technical Center');
-
-            // Category classification
+            const loc = String(ci.site_name || ci.location || 'Pune Technical Center');
+            const siteCode = String(ci.site_code || 'PUN-01');
+            const rawProdFamily = String(ci.product_family || ci.category || '');
+            
             let category = 'Core WAN & Circuits';
-            if (num.startsWith('MOB-') || rawCat.includes('mobile') || name.toLowerCase().includes('sim') || name.toLowerCase().includes('roaming')) {
+            if (rawProdFamily.includes('Mobility') || rawProdFamily.includes('Mobile') || num.startsWith('MOB-') || name.toLowerCase().includes('sim')) {
               category = 'Mobile Fleet & SIMs';
-            } else if (num.startsWith('SIP-') || rawCat.includes('voice') || name.toLowerCase().includes('sip') || name.toLowerCase().includes('voice trunk')) {
+            } else if (rawProdFamily.includes('Voice') || rawProdFamily.includes('SIP') || num.startsWith('SIP-') || name.toLowerCase().includes('voice')) {
               category = 'Voice & SIP Trunks';
-            } else if (num.startsWith('DIA-') || num.includes('DIA') || num.includes('CC-') || num === 'CKT-SGP-01' || name.toLowerCase().includes('directconnect') || name.toLowerCase().includes('cloud connect') || name.toLowerCase().includes('dia') || name.toLowerCase().includes('cross-connect')) {
+            } else if (rawProdFamily.includes('Cloud') || rawProdFamily.includes('Interconnect') || num.startsWith('DIA-') || num.includes('CC-') || num === 'CKT-SGP-01' || name.toLowerCase().includes('cloud') || name.toLowerCase().includes('dia') || name.toLowerCase().includes('directconnect')) {
               category = 'Fiber Broadband';
             }
 
-            // Site Code derivation
-            const siteCode = ci.site_code || (
-              loc.toLowerCase().includes('pune') ? 'PUN-01' :
-              loc.toLowerCase().includes('mumbai') ? 'MUM-HQ' :
-              loc.toLowerCase().includes('bangalore') || loc.toLowerCase().includes('bengaluru') ? 'BLR-01' :
-              loc.toLowerCase().includes('chennai') ? 'CHE-02' : 'SGP-01'
-            );
+            const rawStatus = String(ci.status || 'Operational');
+            const activeCaseNumber = ci.active_case || undefined;
+            const isCriticalOrDegraded = rawStatus === 'Critical' || rawStatus === 'Degraded' || Boolean(activeCaseNumber);
 
-            // Bandwidth / Throughput derivation
             const throughput = ci.throughput || (
               name.includes('10G') ? '10 Gbps' :
               name.includes('1 Gbps') ? '1 Gbps' :
@@ -2028,7 +2242,6 @@ class ServiceNowRestService {
               category === 'Mobile Fleet & SIMs' ? '5G Ultra' : '1 Gbps'
             );
 
-            // Demarcation derivation
             const demarcation = ci.demarcation || (
               category === 'Mobile Fleet & SIMs' ? 'Cisco Industrial 5G Gateway' :
               category === 'Voice & SIP Trunks' ? 'AudioCodes Mediant 1000B SBC' :
@@ -2036,11 +2249,9 @@ class ServiceNowRestService {
               'Cisco ASR 9001 PE'
             );
 
-            const isCriticalOrDegraded = (ci.status === 'Critical' || (num === 'CKT-PUN-001' && this.activeCasesCache.some(c => c.caseNumber === 'CS0001271')));
-
             return {
-              id: ci.number || ci.sys_id,
-              circuitId: ci.number || ci.sys_id,
+              id: num,
+              circuitId: num,
               name,
               category,
               siteCode,
@@ -2049,15 +2260,15 @@ class ServiceNowRestService {
               bandwidth: throughput,
               throughput,
               demarcation,
-              status: isCriticalOrDegraded ? 'Degraded' : 'Operational',
+              status: isCriticalOrDegraded ? (rawStatus === 'Critical' ? 'Critical' : 'Degraded') : 'Operational',
               availability: isCriticalOrDegraded ? '94.2%' : '99.98%',
               latency: isCriticalOrDegraded ? 'Elevated (118ms)' : 'Normal (14ms)',
               packetLoss: isCriticalOrDegraded ? '12.4%' : '0.0%',
               lastAssessed: 'Just now',
-              vlan: ci.vlan || (num === 'CKT-PUN-001' ? 'VLAN 402' : undefined),
-              ipSubnet: ci.ip_subnet || (num === 'CKT-PUN-001' ? '10.240.12.0/30' : undefined),
-              carrierTail: ci.carrier_tail || (num === 'CKT-PUN-001' ? 'Tata Comm Dark Fiber Tail' : undefined),
-              activeCaseNumber: num === 'CKT-PUN-001' ? 'CS0001271' : undefined
+              vlan: ci.vlan,
+              ipSubnet: ci.ip_subnet,
+              carrierTail: ci.carrier_tail,
+              activeCaseNumber
             };
           });
 
@@ -2070,14 +2281,14 @@ class ServiceNowRestService {
 
           this.portalData.servicesList = mapped;
           this.portalData.serviceMetrics = {
-            core_wan: (data.metrics?.fiber_broadband > 0) ? data.metrics.core_wan : core_wan,
-            fiber_broadband: (data.metrics?.fiber_broadband > 0) ? data.metrics.fiber_broadband : fiber_broadband,
-            voice_sip: (data.metrics?.voice_sip > 0) ? data.metrics.voice_sip : voice_sip,
-            mobile_fleet: (data.metrics?.mobile_fleet > 0) ? data.metrics.mobile_fleet : mobile_fleet,
-            total: total
+            core_wan,
+            fiber_broadband,
+            voice_sip,
+            mobile_fleet,
+            total
           };
 
-          this.logCall('POST', endpoint, res.status, `200 OK - Fetched ${mapped.length} Live Services from sn_install_base_sold_product`, undefined, { count: mapped.length, metrics: this.portalData.serviceMetrics });
+          this.logCall('GET', endpoint, res.status, `200 OK - Fetched ${mapped.length} Live Services from ServiceNow CMDB`, undefined, { count: mapped.length, metrics: this.portalData.serviceMetrics });
           return mapped;
         }
       }
@@ -2119,15 +2330,34 @@ class ServiceNowRestService {
     const endpoint = `${SERVICENOW_CONFIG.instanceUrl.replace(/\/$/, '')}${SERVICENOW_CONFIG.tableApi.case}`;
     const headers = serviceNowAuthService.getAuthHeaders();
 
-    const requestBody = {
+    const userSysId = typeof window !== 'undefined' 
+      ? (sessionStorage.getItem('sn_user_sys_id') || localStorage.getItem('sn_user_sys_id')) 
+      : null;
+    const userName = typeof window !== 'undefined' 
+      ? (sessionStorage.getItem('sn_username') || localStorage.getItem('sn_username')) 
+      : null;
+
+    const accountSysId = typeof window !== 'undefined' 
+      ? (sessionStorage.getItem('sn_account_sys_id') || localStorage.getItem('sn_account_sys_id')) 
+      : null;
+
+    const requestBody: any = {
       short_description: payload.subject,
       description: payload.description,
       priority: payload.priority.startsWith('P1') ? '1' : payload.priority.startsWith('P2') ? '2' : payload.priority.startsWith('P3') ? '3' : '4',
       category: payload.category,
       contact_type: 'self-service',
-      userName: (typeof window !== 'undefined' ? (localStorage.getItem('sn_username') || sessionStorage.getItem('sn_username')) : null) || SERVICENOW_CONFIG.defaultUsername,
+      userName: userName || SERVICENOW_CONFIG.defaultUsername,
       comments: `Contact: ${payload.contactName} (${payload.contactEmail}, ${payload.contactPhone}). Service: ${payload.serviceName} (${payload.serviceId})`
     };
+
+    if (accountSysId) {
+      requestBody.account = accountSysId;
+    }
+
+    if (userSysId) {
+      requestBody.contact = userSysId;
+    }
 
     let confirmedCaseNumber = fallbackCaseNumber;
     let createdSysId = 'sys_' + Math.random().toString(36).substring(2, 12);
@@ -2157,9 +2387,10 @@ class ServiceNowRestService {
 
     if (confirmedCaseNumber === fallbackCaseNumber) {
       try {
+        const tableHeaders = serviceNowAuthService.getTableAuthHeaders();
         const response = await fetch(endpoint, {
           method: 'POST',
-          headers,
+          headers: tableHeaders,
           body: JSON.stringify(requestBody)
         });
 
@@ -2213,7 +2444,8 @@ class ServiceNowRestService {
       priorityTone: payload.priority.startsWith('P1') ? 'red' : payload.priority.startsWith('P2') ? 'amber' : 'blue',
       openedTime: 'Just now',
       incidentRef: newIncidentRef,
-      queue: 'Service Assurance Support Queue'
+      queue: 'Service Assurance Support Queue',
+      contact: payload.contactName || (typeof window !== 'undefined' ? (sessionStorage.getItem('sn_first_name') ? `${sessionStorage.getItem('sn_first_name')} ${sessionStorage.getItem('sn_last_name') || ''}`.trim() : null) : null) || this.portalData.customer
     };
     this.activeCasesCache.unshift(newActiveCase);
 

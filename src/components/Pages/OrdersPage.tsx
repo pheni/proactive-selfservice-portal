@@ -95,19 +95,27 @@ export const OrdersPage: React.FC<OrdersPageProps> = ({ onNavigate }) => {
 
       {/* Filter Tabs */}
       <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-3">
-        {(['All', 'In Progress', 'Pending Acceptance', 'Completed'] as const).map(tab => (
-          <button
-            key={tab}
-            onClick={() => setFilter(tab)}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition ${
-              filter === tab
-                ? 'bg-[#092E4C] text-white shadow-xs'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
+        {(['All', 'In Progress', 'Pending Acceptance', 'Completed'] as const).map(tab => {
+          const count = tab === 'All' ? orders.length : orders.filter(o => o.status === tab).length;
+          return (
+            <button
+              key={tab}
+              onClick={() => setFilter(tab)}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+                filter === tab
+                  ? 'bg-[#092E4C] text-white shadow-xs'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              <span>{tab}</span>
+              <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-extrabold ${
+                filter === tab ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
+              }`}>
+                {count}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Orders List */}

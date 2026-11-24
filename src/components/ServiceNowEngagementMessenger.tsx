@@ -111,7 +111,7 @@ export default function ServiceNowEngagementMessenger() {
     const currentUsername = 
       (typeof window !== "undefined" 
         ? (sessionStorage.getItem("sn_username") || localStorage.getItem("sn_username")) 
-        : null) || "goutam.hazra";
+        : null) || SERVICENOW_CONFIG.defaultUsername;
 
     const currentUserEmail = 
       (typeof window !== "undefined" 

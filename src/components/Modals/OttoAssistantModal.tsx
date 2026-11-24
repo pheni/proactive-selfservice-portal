@@ -188,7 +188,7 @@ export const OttoAssistantModal: React.FC<OttoAssistantModalProps> = ({
 
           if (commentText) {
             const nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const authorName = (typeof window !== 'undefined' ? (localStorage.getItem('sn_user_fullname') || localStorage.getItem('sn_username')) : null) || portalData.customer || 'Goutam Hazra';
+            const authorName = (typeof window !== 'undefined' ? (localStorage.getItem('sn_user_fullname') || localStorage.getItem('sn_username')) : null) || portalData.customer || 'Customer';
             const newAct: CaseActivityItem = {
               id: Math.random().toString(),
               author: authorName,
@@ -224,7 +224,7 @@ export const OttoAssistantModal: React.FC<OttoAssistantModalProps> = ({
           if (priTargetCase && (res.actionTaken === 'CASE_ESCALATED' || res.actionTaken === 'PRIORITY_DOWNGRADED')) {
             const isDowngrade = res.actionTaken === 'PRIORITY_DOWNGRADED' || res.reply?.includes('Downgraded');
             const nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const authorName = (typeof window !== 'undefined' ? (localStorage.getItem('sn_user_fullname') || localStorage.getItem('sn_username')) : null) || portalData.customer || 'Goutam Hazra';
+            const authorName = (typeof window !== 'undefined' ? (localStorage.getItem('sn_user_fullname') || localStorage.getItem('sn_username')) : null) || portalData.customer || 'Customer';
             const escAct: CaseActivityItem = {
               id: Math.random().toString(),
               author: authorName,
